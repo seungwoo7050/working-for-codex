@@ -23,10 +23,15 @@ export interface ProfilerReport {
   gpuTimings: Array<{ label: string; time: number }>;
 }
 
+type TimerQueryExtension = {
+  TIME_ELAPSED_EXT: number;
+  GPU_DISJOINT_EXT: number;
+};
+
 export class WebGLProfiler {
   private gl: WebGL2RenderingContext;
   private ext: {
-    timer: any | null;
+    timer: TimerQueryExtension | null;
   };
   
   private frameHistory: FrameStats[] = [];

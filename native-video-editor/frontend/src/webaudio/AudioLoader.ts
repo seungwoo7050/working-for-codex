@@ -42,18 +42,22 @@ export class AudioLoader {
       const chunks: Uint8Array[] = [];
       let loaded = 0;
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        
-        chunks.push(value);
-        loaded += value.length;
-        
-        onProgress({
-          loaded,
-          total,
-          percent: (loaded / total) * 100,
-        });
+      let done = false;
+
+      while (!done) {
+        const { done: isDone, value } = await reader.read();
+        done = Boolean(isDone);
+
+        if (value) {
+          chunks.push(value);
+          loaded += value.length;
+
+          onProgress({
+            loaded,
+            total,
+            percent: (loaded / total) * 100,
+          });
+        }
       }
 
       const arrayBuffer = this.concatArrayBuffers(chunks);
