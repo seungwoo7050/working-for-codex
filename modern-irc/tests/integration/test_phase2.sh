@@ -9,11 +9,12 @@ NC='\033[0m'
 PORT=6667
 PASS="testpass"
 SERVER_PID=""
+SERVER_BIN="./modern-irc"
 
 # Start the IRC server
 start_server() {
     echo -e "${BLUE}Starting IRC server on port $PORT...${NC}"
-    ./ircserv $PORT $PASS &
+    ${SERVER_BIN} $PORT $PASS &
     SERVER_PID=$!
     sleep 2
 
@@ -66,6 +67,11 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 echo -e "${GREEN}Build successful${NC}"
+
+if [ ! -x ${SERVER_BIN} ]; then
+    echo -e "${RED}Server binary not found at ${SERVER_BIN}${NC}"
+    exit 1
+fi
 
 # Start server
 start_server

@@ -1,6 +1,7 @@
 # modern-irc - RFC 1459 IRC 서버 구현
 
 > C++17 기반 IRC (Internet Relay Chat) 서버 구현 프로젝트
+> 테스트/CI: 통합 스크립트(`tests/integration/test_phase2.sh`)를 로컬과 GitHub Actions(`.github/workflows/ci.yml`)에서 빌드 후 실행하며, 포트폴리오 요약은 [PORTFOLIO.md](../PORTFOLIO.md) 참조.
 
 ---
 
