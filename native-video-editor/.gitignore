@@ -61,3 +61,6 @@ monitoring/data/
 *.tmp
 *.temp
 .cache/
+
+# Project metadata
+.meta/

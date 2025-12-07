@@ -70,12 +70,10 @@
 | 패치 ID | 패치 이름 | 설계 문서 | 핵심 산출물 |
 |---------|-----------|-----------|-------------|
 | 1.3.1 | Spring Data Elasticsearch 설정 | v1.3.0-elasticsearch.md §3.1 | build.gradle 의존성 |
-| 1.3.2 | IssueDocument 정의 | v1.3.0-elasticsearch.md §3.2 | ProductDocument.java* |
-| 1.3.3 | SearchService 구현 | v1.3.0-elasticsearch.md §4 | ProductSearchService.java |
+| 1.3.2 | ProductDocument 정의 | v1.3.0-elasticsearch.md §3.2 | ProductDocument.java |
+| 1.3.3 | ProductSearchService 구현 | v1.3.0-elasticsearch.md §4 | ProductSearchService.java |
 | 1.3.4 | 전문 검색 API | v1.3.0-elasticsearch.md §4 | ProductSearchController.java |
-| 1.3.5 | 동기화 리스너 | v1.3.0-elasticsearch.md §5 | ProductService (인덱싱 포함) |
-
-*참고: 설계 문서는 IssueDocument를 언급하지만, 실제 구현은 Product 도메인으로 대체됨
+| 1.3.5 | Product 저장 시 ES 동기화 | v1.3.0-elasticsearch.md §5 | ProductService (인덱싱 포함) |
 
 ---
 

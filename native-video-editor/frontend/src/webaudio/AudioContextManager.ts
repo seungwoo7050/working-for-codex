@@ -93,13 +93,7 @@ export class AudioContextManager {
   }
 
   getOutputLatency(): number {
-    const ctx = this.context;
-
-    if (ctx && 'outputLatency' in ctx) {
-      const extendedContext = ctx as AudioContext & { outputLatency?: number };
-      return extendedContext.outputLatency ?? 0;
-    }
-
-    return 0;
+    const ctx = this.context as (AudioContext & { outputLatency?: number }) | null;
+    return ctx?.outputLatency ?? 0;
   }
 }

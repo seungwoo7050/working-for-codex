@@ -2,7 +2,6 @@
 
 **상태**: 📝 설계 완료 (v0.1.0 - 2.6)
 **기술 스택**: Spring Boot 3.x · Java 17 · JPA · PostgreSQL · Redis · Kafka · Elasticsearch
-**테스트 & CI**: JUnit 5 · Spring Boot Test 기반 시나리오를 `./gradlew test`로 검증하며, GitHub Actions 워크플로우(`.github/workflows/ci.yml`)에서 동일 명령을 실행합니다. 포트폴리오 요약은 [PORTFOLIO.md](../PORTFOLIO.md)에서 확인할 수 있습니다.
 
 ---
 

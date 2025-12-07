@@ -1241,8 +1241,8 @@ git tag -a v3.1.4 -m "v3.1.4: WebGL Performance Optimization Complete"
 #### 📋 작업 내용
 | 순서 | 작업 | Design 문서 | 핵심 파일 | 학습 포커스 |
 |------|------|-------------|----------|-------------|
-| 3.2.0.1 | AudioContext 초기화 | `design/v3.2.0-webaudio-core-engine.md` | `frontend/src/audio/WebAudioEngine.ts` | AudioContext 생성 |
-| 3.2.0.2 | 오디오 파일 로딩 | 〃 | `frontend/src/audio/AudioLoader.ts` | fetch + decodeAudioData |
+| 3.2.0.1 | AudioContext 초기화 | `design/v3.2.0-webaudio-core-engine.md` | `frontend/src/webaudio/AudioContextManager.ts` | AudioContext 생성 |
+| 3.2.0.2 | 오디오 파일 로딩 | 〃 | `frontend/src/webaudio/AudioLoader.ts` | fetch + decodeAudioData |
 | 3.2.0.3 | 오디오 버퍼 관리 | 〃 | `frontend/src/audio/AudioBufferManager.ts` | 버퍼 풀링 |
 | 3.2.0.4 | WebAudio 디버깅 | 〃 | `frontend/src/audio/AudioDebug.ts` | 디버깅 유틸리티 |
 

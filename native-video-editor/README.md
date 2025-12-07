@@ -1,8 +1,7 @@
 # native-video-editor - 웹 기반 동영상 편집기
 
-**상태**: ✅ Phase 3 완료 (프로덕션 준비)
+**상태**: ✅ Phase 3 완료 (프로덕션 준비)  
 **기술 스택**: React 18 · Node.js 20 · TypeScript 5 · C++17 · FFmpeg C API
-**테스트 & CI**: 프론트엔드 린트/빌드와 백엔드 `npm test`를 GitHub Actions(`.github/workflows/ci.yml`)에서 병렬 실행합니다. 포트폴리오 요약은 [PORTFOLIO.md](../PORTFOLIO.md)에서 확인하세요.
 
 ---
 
@@ -356,8 +355,6 @@ native-video-editor/
 - **Docker** 및 **Docker Compose** (권장)
 - **Node.js 20+** (로컬 개발용)
 - **FFmpeg 6.0+** (로컬 개발용)
-  - Ubuntu/Debian 계열: `sudo apt-get install -y ffmpeg`
-  - 백엔드 통합 테스트에서 썸네일/메타데이터 추출을 위해 CLI 바이너리가 필요합니다.
 
 ### 옵션 1: Docker 배포 (권장)
 

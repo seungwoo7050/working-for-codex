@@ -72,14 +72,13 @@ export class AudioDebug {
   }
 
   getInfo(): AudioDebugInfo {
-    const contextWithLatency = this.context as AudioContext & { outputLatency?: number };
-
+    const ctx = this.context as AudioContext & { outputLatency?: number };
     return {
       contextState: this.context.state,
       sampleRate: this.context.sampleRate,
       currentTime: this.context.currentTime,
       baseLatency: this.context.baseLatency,
-      outputLatency: 'outputLatency' in this.context ? contextWithLatency.outputLatency ?? 0 : 0,
+      outputLatency: ctx.outputLatency ?? 0,
       activeNodes: this.nodeCount,
     };
   }

@@ -245,10 +245,10 @@ GIT_COMMITTER_DATE="2025-04-18 20:15:00" git tag -a v1.2.0 -m "MVP 1.2: Batch, S
 | 순서 | 작업 | Design 문서 | 핵심 파일 |
 |------|------|-------------|----------|
 | 1.3.1 | Spring Data Elasticsearch 설정 | `design/v1.3.0-elasticsearch.md` | `build.gradle` |
-| 1.3.2 | IssueDocument 정의 | 〃 | `src/main/java/.../search/IssueDocument.java` |
-| 1.3.3 | SearchService 구현 | 〃 | `src/main/java/.../search/SearchService.java` |
-| 1.3.4 | 전문 검색 API | 〃 | `src/main/java/.../search/SearchController.java` |
-| 1.3.5 | 동기화 리스너 | 〃 | `src/main/java/.../search/IssueIndexListener.java` |
+| 1.3.2 | ProductDocument 정의 | 〃 | `src/main/java/.../search/domain/ProductDocument.java` |
+| 1.3.3 | ProductSearchService 구현 | 〃 | `src/main/java/.../search/service/ProductSearchService.java` |
+| 1.3.4 | 전문 검색 API | 〃 | `src/main/java/.../search/controller/ProductSearchController.java` |
+| 1.3.5 | Product 저장 시 ES 동기화 | 〃 | `src/main/java/.../search/service/ProductService.java` |
 
 ### 🔖 커밋 포인트
 ```bash
@@ -258,24 +258,24 @@ git commit -m "chore(deps): add Spring Data Elasticsearch dependency"
 
 # 1.3.2 완료 [📅 2025-04-19 20:00:00]
 GIT_AUTHOR_DATE="2025-04-19 20:00:00" GIT_COMMITTER_DATE="2025-04-19 20:00:00" \
-git commit -m "feat(search): define IssueDocument for Elasticsearch"
+git commit -m "feat(search): define ProductDocument for Elasticsearch"
 
 # 1.3.3 완료 [📅 2025-04-20 21:00:00]
 GIT_AUTHOR_DATE="2025-04-20 21:00:00" GIT_COMMITTER_DATE="2025-04-20 21:00:00" \
-git commit -m "feat(search): implement SearchService with full-text search"
+git commit -m "feat(search): implement ProductSearchService with full-text search"
 
 # 1.3.4 완료 [📅 2025-04-21 19:30:00]
 GIT_AUTHOR_DATE="2025-04-21 19:30:00" GIT_COMMITTER_DATE="2025-04-21 19:30:00" \
-git commit -m "feat(search): add SearchController with search API"
+git commit -m "feat(search): add ProductSearchController with search API"
 
 # 1.3.5 완료 → v1.3.0 태그 [📅 2025-04-22 20:00:00]
 GIT_AUTHOR_DATE="2025-04-22 20:00:00" GIT_COMMITTER_DATE="2025-04-22 20:00:00" \
-git commit -m "feat(search): add event listener for ES sync"
+git commit -m "feat(search): add ES indexing in ProductService"
 GIT_COMMITTER_DATE="2025-04-22 20:15:00" git tag -a v1.3.0 -m "MVP 1.3: Elasticsearch Search"
 ```
 
 ### ✅ 완료 기준
-- [ ] Issue 생성 시 ES 자동 색인
+- [ ] Product 생성 시 ES 자동 색인
 - [ ] 키워드 + 필터 검색 동작
 - [ ] 재색인 API 동작
 

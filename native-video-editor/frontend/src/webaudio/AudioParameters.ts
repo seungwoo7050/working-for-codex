@@ -89,10 +89,10 @@ export class AudioParameters {
    * 현재 값 유지하며 취소
    */
   cancelAndHold(param: AudioParam, holdTime: number): void {
-    const extendedParam = param as AudioParam & { cancelAndHoldAtTime?: (time: number) => void };
-
-    if (typeof extendedParam.cancelAndHoldAtTime === 'function') {
-      extendedParam.cancelAndHoldAtTime(holdTime);
+    type ExtendedAudioParam = AudioParam & { cancelAndHoldAtTime?: (time: number) => void };
+    const extParam = param as ExtendedAudioParam;
+    if (extParam.cancelAndHoldAtTime) {
+      extParam.cancelAndHoldAtTime(holdTime);
     } else {
       param.cancelScheduledValues(holdTime);
       param.setValueAtTime(param.value, holdTime);

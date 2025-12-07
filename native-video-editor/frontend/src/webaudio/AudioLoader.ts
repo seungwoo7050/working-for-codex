@@ -41,17 +41,15 @@ export class AudioLoader {
       const reader = response.body.getReader();
       const chunks: Uint8Array[] = [];
       let loaded = 0;
-
       let done = false;
 
       while (!done) {
-        const { done: isDone, value } = await reader.read();
-        done = Boolean(isDone);
-
-        if (value) {
-          chunks.push(value);
-          loaded += value.length;
-
+        const result = await reader.read();
+        done = result.done;
+        if (result.value) {
+          chunks.push(result.value);
+          loaded += result.value.length;
+          
           onProgress({
             loaded,
             total,

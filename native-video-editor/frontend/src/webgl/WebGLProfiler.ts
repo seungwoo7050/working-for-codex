@@ -23,10 +23,13 @@ export interface ProfilerReport {
   gpuTimings: Array<{ label: string; time: number }>;
 }
 
-type TimerQueryExtension = {
+interface TimerQueryExtension {
   TIME_ELAPSED_EXT: number;
+  TIMESTAMP_EXT: number;
   GPU_DISJOINT_EXT: number;
-};
+  QUERY_COUNTER_BITS_EXT: number;
+  queryCounterEXT(query: WebGLQuery, target: number): void;
+}
 
 export class WebGLProfiler {
   private gl: WebGL2RenderingContext;
