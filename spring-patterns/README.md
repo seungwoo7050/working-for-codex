@@ -1,7 +1,7 @@
 # Spring Patterns Training (v1.0–v2.6)
 
 **상태**: 📝 설계 완료 (v0.1.0 - v2.6), v2.3 완료
-**기술 스택**: Spring Boot 3.3.5 · Java 17 · WebFlux · R2DBC · PostgreSQL · Redis · Kafka · Elasticsearch
+**기술 스택**: Spring Boot 3.3.5 · Java 21 · WebFlux · R2DBC · PostgreSQL · Redis · Kafka · Elasticsearch
 
 ---
 

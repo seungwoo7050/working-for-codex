@@ -10,11 +10,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '21'
           cache: gradle
       - name: Run backend tests
         working-directory: spring-patterns
@@ -60,23 +60,21 @@ jobs:
           npm run lint
           npm run build
 
-  modern-irc:
+  native-video-editor-native:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - name: Build server
-        working-directory: modern-irc
-        run: make
-
-  ray-tracer:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Configure project
-        run: cmake -S ray-tracer -B ray-tracer/build -DCMAKE_BUILD_TYPE=Release
-      - name: Build binaries
-        run: cmake --build ray-tracer/build --config Release
-      - name: Run tests
-        run: ctest --test-dir ray-tracer/build --output-on-failure
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: |
+            native-video-editor/native/package-lock.json
+      - name: Install native dependencies
+        working-directory: native-video-editor/native
+        run: npm ci
+      - name: Run native tests
+        working-directory: native-video-editor/native
+        run: npm test

@@ -10,7 +10,7 @@
 
 | 프로젝트 | 기술 스택 | 난이도 | 상태 |
 |----------|----------|--------|------|
-| **spring-patterns** | Java 17, Spring Boot 3.x, JPA, PostgreSQL, Redis, Docker | ⭐⭐⭐⭐ | ✅ 완료 |
+| **spring-patterns** | Java 17, Spring Boot 3.x, WebFlux, R2DBC, Virtual Threads | ⭐⭐⭐⭐⭐ | ✅ 완료 |
 | **native-video-editor** | C++17, FFmpeg, React 18, Node.js 20, TypeScript 5 | ⭐⭐⭐⭐⭐ | ✅ 완료 |
 | **modern-irc** | C++17, BSD Sockets, poll() I/O Multiplexing | ⭐⭐⭐ | ✅ 완료 |
 | **ray-tracer** | C++17, CMake, Monte Carlo Integration | ⭐⭐⭐ | ✅ 완료 |
@@ -28,9 +28,11 @@
 | 분류 | 기술 |
 |------|------|
 | **언어** | Java 17 |
-| **프레임워크** | Spring Boot 3.x, Spring Cloud Gateway |
-| **데이터** | JPA/Hibernate, H2 (개발), PostgreSQL (운영) |
-| **캐시** | Redis, Spring Cache |
+| **프레임워크** | Spring Boot 3.x, Spring WebFlux, Spring Cloud Gateway |
+| **데이터** | R2DBC, JPA/Hibernate, H2 (개발), PostgreSQL (운영) |
+| **리액티브** | Project Reactor, WebFlux Router Functions |
+| **동시성** | Virtual Threads, Structured Concurrency |
+| **캐시** | Redis, Spring Cache, Rate Limiting |
 | **검색** | Elasticsearch |
 | **빌드** | Gradle |
 | **컨테이너** | Docker, Docker Compose |
@@ -47,28 +49,33 @@
 | v1.4.0 | Async Events | @Async, @EventListener 비동기 이벤트 처리 |
 | v1.5.0 | Docker & Production | PostgreSQL, Redis, Docker Compose 인프라 |
 | v1.6.0 | API Gateway | Spring Cloud Gateway, 라우팅, 필터 |
+| v2.0.0 | WebFlux & R2DBC | 리액티브 전환, 비블로킹 데이터베이스 |
+| v2.1.0 | Virtual Threads | 하이브리드 동시성, Structured Concurrency |
+| v2.2.0 | Rate Limiting | Redis 기반 분산 Rate Limiter |
+| v2.3.0 | Advanced Caching & Compression | Redis 캐시 전략, Gzip 압축 |
 
 ### 1.4 아키텍처
 
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│   API Gateway   │────▶│  Spring Boot    │────▶│   PostgreSQL    │
-│   (Port 8081)   │     │   (Port 8080)   │     │                 │
+│   API Gateway   │────▶│  Spring WebFlux │────▶│   PostgreSQL    │
+│   (Port 8081)   │     │   (Port 8080)   │  R2DBC │  (리액티브)    │
 └─────────────────┘     └────────┬────────┘     └─────────────────┘
                                  │
                     ┌────────────┼────────────┐
                     │            │            │
               ┌─────▼────┐ ┌────▼─────┐ ┌────▼────────┐
-              │  Redis   │ │ Elastic  │ │ Kafka       │
-              │  (캐시)   │ │ search   │ │ (이벤트)    │
+              │  Redis   │ │ Elastic  │ │ Virtual     │
+              │ (캐시/제한)│ │ search   │ │ Threads    │
               └──────────┘ └──────────┘ └─────────────┘
 ```
 
 ### 1.5 테스트 커버리지
 
-- **단위 테스트**: JUnit 5, Mockito
-- **통합 테스트**: @SpringBootTest, TestContainers
-- **API 테스트**: MockMvc, WebTestClient
+- **단위 테스트**: JUnit 5, Mockito, Reactor Test
+- **통합 테스트**: @SpringBootTest, TestContainers, WebTestClient
+- **API 테스트**: MockMvc, WebTestClient (리액티브)
+- **성능 테스트**: JMeter, wrk (10K req/s 목표)
 
 ### 1.6 CI/CD 파이프라인
 
@@ -82,10 +89,14 @@
 ### 1.7 학습 포인트
 
 - **레이어드 아키텍처**: Controller → Service → Repository 패턴
+- **리액티브 프로그래밍**: WebFlux, Project Reactor, Mono/Flux
+- **비블로킹 데이터베이스**: R2DBC, 리액티브 데이터 액세스
+- **Virtual Threads**: Java 21, 하이브리드 동시성 모델
 - **트랜잭션 관리**: @Transactional, 롤백 테스트
 - **RBAC 구현**: 역할 기반 권한 검증 로직
 - **배치 처리**: Spring Scheduler를 활용한 정기 작업
-- **캐싱 전략**: Cache Aside 패턴, TTL 설정
+- **Rate Limiting**: Redis 기반 분산 제한
+- **캐싱 전략**: Cache Aside 패턴, TTL 설정, 압축
 - **검색 최적화**: Elasticsearch 인덱싱, 쿼리 최적화
 - **마이크로서비스**: API Gateway 패턴, 라우팅, 필터 체인
 
@@ -93,10 +104,12 @@
 
 | 역량 | 증명 |
 |------|------|
-| Spring Boot 숙달 | 6개 버전에 걸친 점진적 기능 확장 |
-| 아키텍처 설계 | 레이어드 → 마이크로서비스 진화 |
-| 데이터베이스 | JPA N+1 해결, 쿼리 최적화 |
-| 인프라 | Docker, Redis, Elasticsearch 통합 |
+| Spring Boot 숙달 | 11개 버전에 걸친 점진적 기능 확장 |
+| 리액티브 프로그래밍 | WebFlux + R2DBC 완전 전환 |
+| 고성능 아키텍처 | Virtual Threads, Rate Limiting, 캐싱 전략 |
+| 아키텍처 설계 | 레이어드 → 리액티브 → 마이크로서비스 진화 |
+| 데이터베이스 | JPA → R2DBC 전환, 쿼리 최적화 |
+| 인프라 | Docker, Redis, Elasticsearch, Rate Limiting 통합 |
 
 ### 1.9 지원 가능 포지션
 
