@@ -1,0 +1,9 @@
+# Reactive 프로파일 전용 설정
+# spring.profiles.active=reactive 로 활성화
+
+spring:
+  # R2DBC 스키마 초기화
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema-r2dbc.sql

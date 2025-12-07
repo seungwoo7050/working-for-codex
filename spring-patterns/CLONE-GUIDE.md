@@ -23,6 +23,11 @@
 | M2.5 | v1.4.0 | 2일 | Async Events |
 | M2.6 | v1.5.0 | 2일 | Docker & Production |
 | M2.7 | v1.6.0 | 1주 | API Gateway |
+| M3.0 | v2.0.0 | 1주 | WebFlux & R2DBC 전환 |
+| M3.1 | v2.1.0 | 1.5주 | Virtual Threads 통합 |
+| M3.2 | v2.2.0 | 0.5주 | Rate Limiting |
+| M3.3 | v2.3.0 | 0.5주 | 캐싱 & 압축 |
+| M3.4 | v2.4.0 | 1주 | 성능 최적화 & 벤치마크 |
 
 ---
 
@@ -422,3 +427,202 @@ GIT_COMMITTER_DATE="2025-05-07 20:15:00" git tag -a v1.6.0 -m "MVP 1.6: API Gate
 - [ ] 로깅 필터 동작 (요청/응답 로그)
 - [ ] CORS 처리 Gateway에서 동작
 - [ ] Docker Compose로 전체 스택 실행
+
+---
+
+## v2.0.0: WebFlux & R2DBC 전환 (1주)
+
+> 📅 **권장 기간**: 2025년 5월 8일 ~ 5월 14일
+
+### 📖 사전 학습
+```
+📚 읽어야 할 Prerequisite
+├── Spring WebFlux 공식 문서
+│   └── https://docs.spring.io/spring-framework/reference/web/webflux.html
+├── Project Reactor 기초
+│   └── https://projectreactor.io/docs/core/release/reference/
+├── R2DBC 공식 문서
+│   └── https://r2dbc.io/
+└── 리액티브 프로그래밍 패러다임
+    └── Mono, Flux, Backpressure
+```
+
+### 📋 작업 내용
+| 순서 | 작업 | Design 문서 | 핵심 파일 |
+|------|------|-------------|----------|
+| 2.0.1 | WebFlux & R2DBC 의존성 추가 | `design/v2.0.0-webflux-r2dbc.md` | `build.gradle` |
+| 2.0.2 | R2DBC Repository 전환 | 〃 | `src/main/java/.../product/ProductR2dbcRepository.java` |
+| 2.0.3 | 리액티브 컨트롤러 구현 | 〃 | `src/main/java/.../product/ReactiveProductController.java` |
+| 2.0.4 | 리액티브 서비스 구현 | 〃 | `src/main/java/.../product/ReactiveProductService.java` |
+| 2.0.5 | SSE 스트리밍 구현 | 〃 | `src/main/java/.../product/ReactiveProductController.java` |
+
+### 🔖 커밋 포인트
+```bash
+# 2.0.1 완료 [📅 2025-05-08 20:00:00]
+GIT_AUTHOR_DATE="2025-05-08 20:00:00" GIT_COMMITTER_DATE="2025-05-08 20:00:00" \
+git commit -m "feat(deps): migrate from Spring MVC to WebFlux with R2DBC"
+
+# 2.0.2 완료 [📅 2025-05-09 21:00:00]
+GIT_AUTHOR_DATE="2025-05-09 21:00:00" GIT_COMMITTER_DATE="2025-05-09 21:00:00" \
+git commit -m "feat(repo): convert JPA to R2DBC repositories"
+
+# 2.0.3 완료 [📅 2025-05-11 15:00:00]
+GIT_AUTHOR_DATE="2025-05-11 15:00:00" GIT_COMMITTER_DATE="2025-05-11 15:00:00" \
+git commit -m "feat(controller): implement reactive controllers with Mono/Flux"
+
+# 2.0.4 완료 [📅 2025-05-12 20:00:00]
+GIT_AUTHOR_DATE="2025-05-12 20:00:00" GIT_COMMITTER_DATE="2025-05-12 20:00:00" \
+git commit -m "feat(service): add reactive service layer with backpressure"
+
+# 2.0.5 완료 → v2.0.0 태그 [📅 2025-05-14 20:00:00]
+GIT_AUTHOR_DATE="2025-05-14 20:00:00" GIT_COMMITTER_DATE="2025-05-14 20:00:00" \
+git commit -m "feat(sse): add Server-Sent Events for product updates"
+GIT_COMMITTER_DATE="2025-05-14 20:15:00" git tag -a v2.0.0 -m "v2.0.0: WebFlux & R2DBC Migration"
+```
+
+### ✅ 완료 기준
+- [x] WebFlux 기반 비동기 API 동작
+- [x] R2DBC Repository로 DB 접근
+- [x] SSE 스트리밍 엔드포인트 동작
+- [x] 기존 테스트 + 신규 리액티브 테스트 통과
+
+---
+
+## v2.1.0: Virtual Threads 통합 (0.5주)
+
+**목표**: Java 21 Virtual Threads를 활용한 하이브리드 아키텍처
+
+### 패치 테이블
+
+| 패치 | 설명 | 참조 문서 | 핵심 산출물 |
+|------|------|----------|-------------|
+| 2.1.1 | Virtual Threads 설정 | `design/v2.1.0-virtual-threads.md` | `application.yml`, `VirtualThreadConfig.java` |
+| 2.1.2 | 블로킹 코드 래핑 | `design/v2.1.0-virtual-threads.md` | `HybridProductService.java` |
+| 2.1.3 | 레거시 시스템 어댑터 | `design/v2.1.0-virtual-threads.md` | `LegacySystemAdapter.java` |
+| 2.1.4 | 외부 API 병렬 호출 | `design/v2.1.0-virtual-threads.md` | `ExternalApiClient.java` |
+| 2.1.5 | Virtual Threads 테스트 | `design/v2.1.0-virtual-threads.md` | `VirtualThreadsTest.java` |
+
+### 커밋 타임라인
+```bash
+# 2.1.1 완료 [📅 2025-05-15 10:00:00]
+GIT_AUTHOR_DATE="2025-05-15 10:00:00" GIT_COMMITTER_DATE="2025-05-15 10:00:00" \
+git commit -m "feat(config): enable Virtual Threads for Tomcat executor"
+
+# 2.1.2 완료 [📅 2025-05-15 14:00:00]
+GIT_AUTHOR_DATE="2025-05-15 14:00:00" GIT_COMMITTER_DATE="2025-05-15 14:00:00" \
+git commit -m "feat(service): wrap blocking calls with boundedElastic scheduler"
+
+# 2.1.3 완료 [📅 2025-05-16 10:00:00]
+GIT_AUTHOR_DATE="2025-05-16 10:00:00" GIT_COMMITTER_DATE="2025-05-16 10:00:00" \
+git commit -m "feat(adapter): add legacy system adapter with Virtual Threads"
+
+# 2.1.4 완료 [📅 2025-05-16 15:00:00]
+GIT_AUTHOR_DATE="2025-05-16 15:00:00" GIT_COMMITTER_DATE="2025-05-16 15:00:00" \
+git commit -m "feat(external): add external API client with parallel calls"
+
+# 2.1.5 완료 → v2.1.0 태그 [📅 2025-05-17 10:00:00]
+GIT_AUTHOR_DATE="2025-05-17 10:00:00" GIT_COMMITTER_DATE="2025-05-17 10:00:00" \
+git commit -m "test(virtual-threads): add Virtual Threads integration tests"
+GIT_COMMITTER_DATE="2025-05-17 10:15:00" git tag -a v2.1.0 -m "v2.1.0: Virtual Threads Integration"
+```
+
+### ✅ 완료 기준
+- [x] Tomcat Virtual Threads 활성화
+- [x] 블로킹 코드를 Virtual Threads로 래핑
+- [x] 레거시 시스템과의 하이브리드 통합
+- [x] 외부 API 병렬 호출 동작
+- [x] 모든 테스트 통과
+
+---
+
+## v2.2.0: Rate Limiting (0.5주)
+
+**목표**: Redis 기반 분산 Rate Limiting 구현
+
+### 패치 테이블
+
+| 패치 | 설명 | 참조 문서 | 핵심 산출물 |
+|------|------|----------|-------------|
+| 2.2.1 | Rate Limiting 필터 | `design/v2.2.0-rate-limiting.md` | `RateLimitingFilter.java` |
+| 2.2.2 | 클라이언트 식별 | `design/v2.2.0-rate-limiting.md` | `ClientKeyResolver.java` |
+| 2.2.3 | Token Bucket 구현 | `design/v2.2.0-rate-limiting.md` | `TokenBucketRateLimiter.java` |
+| 2.2.4 | Rate Limit 헤더 | `design/v2.2.0-rate-limiting.md` | X-RateLimit-* Headers |
+| 2.2.5 | Rate Limiting 테스트 | `design/v2.2.0-rate-limiting.md` | `RateLimitingTest.java` |
+
+### 커밋 타임라인
+```bash
+# 2.2.1 완료 [📅 2025-05-18 10:00:00]
+GIT_AUTHOR_DATE="2025-05-18 10:00:00" GIT_COMMITTER_DATE="2025-05-18 10:00:00" \
+git commit -m "feat(filter): implement rate limiting filter"
+
+# 2.2.2 완료 [📅 2025-05-18 14:00:00]
+GIT_AUTHOR_DATE="2025-05-18 14:00:00" GIT_COMMITTER_DATE="2025-05-18 14:00:00" \
+git commit -m "feat(filter): add client key resolver for rate limiting"
+
+# 2.2.3 완료 [📅 2025-05-19 10:00:00]
+GIT_AUTHOR_DATE="2025-05-19 10:00:00" GIT_COMMITTER_DATE="2025-05-19 10:00:00" \
+git commit -m "feat(ratelimit): implement token bucket rate limiter"
+
+# 2.2.4 완료 [📅 2025-05-19 14:00:00]
+GIT_AUTHOR_DATE="2025-05-19 14:00:00" GIT_COMMITTER_DATE="2025-05-19 14:00:00" \
+git commit -m "feat(filter): add X-RateLimit headers to response"
+
+# 2.2.5 완료 → v2.2.0 태그 [📅 2025-05-20 10:00:00]
+GIT_AUTHOR_DATE="2025-05-20 10:00:00" GIT_COMMITTER_DATE="2025-05-20 10:00:00" \
+git commit -m "test(ratelimit): add rate limiting integration tests"
+GIT_COMMITTER_DATE="2025-05-20 10:15:00" git tag -a v2.2.0 -m "v2.2.0: Rate Limiting"
+```
+
+### ✅ 완료 기준
+- [x] Token Bucket 기반 Rate Limiter 동작
+- [x] 클라이언트별 요청 제한
+- [x] X-RateLimit-* 헤더 응답
+- [x] 429 Too Many Requests 응답
+- [x] 모든 테스트 통과
+
+---
+
+## v2.3.0: Caching & Compression (0.5주)
+
+**목표**: 응답 캐싱 및 Gzip 압축을 통한 성능 최적화
+
+### 패치 테이블
+
+| 패치 | 설명 | 참조 문서 | 핵심 산출물 |
+|------|------|----------|-------------|
+| 2.3.1 | 캐시 매니저 설정 | `design/v2.3.0-caching-compression.md` | `CachingConfig.java` |
+| 2.3.2 | @Cacheable 적용 | `design/v2.3.0-caching-compression.md` | `CachedProductService.java` |
+| 2.3.3 | 캐시 무효화 | `design/v2.3.0-caching-compression.md` | `@CacheEvict` 적용 |
+| 2.3.4 | Gzip 압축 설정 | `design/v2.3.0-caching-compression.md` | `application.yml` |
+| 2.3.5 | 캐싱/압축 테스트 | `design/v2.3.0-caching-compression.md` | `CachingTest.java` |
+
+### 커밋 타임라인
+```bash
+# 2.3.1 완료 [📅 2025-05-21 10:00:00]
+GIT_AUTHOR_DATE="2025-05-21 10:00:00" GIT_COMMITTER_DATE="2025-05-21 10:00:00" \
+git commit -m "feat(cache): configure cache manager with TTL"
+
+# 2.3.2 완료 [📅 2025-05-21 14:00:00]
+GIT_AUTHOR_DATE="2025-05-21 14:00:00" GIT_COMMITTER_DATE="2025-05-21 14:00:00" \
+git commit -m "feat(service): apply @Cacheable annotations"
+
+# 2.3.3 완료 [📅 2025-05-22 10:00:00]
+GIT_AUTHOR_DATE="2025-05-22 10:00:00" GIT_COMMITTER_DATE="2025-05-22 10:00:00" \
+git commit -m "feat(cache): add cache eviction strategies"
+
+# 2.3.4 완료 [📅 2025-05-22 14:00:00]
+GIT_AUTHOR_DATE="2025-05-22 14:00:00" GIT_COMMITTER_DATE="2025-05-22 14:00:00" \
+git commit -m "feat(server): enable gzip compression"
+
+# 2.3.5 완료 → v2.3.0 태그 [📅 2025-05-23 10:00:00]
+GIT_AUTHOR_DATE="2025-05-23 10:00:00" GIT_COMMITTER_DATE="2025-05-23 10:00:00" \
+git commit -m "test(cache): add caching integration tests"
+GIT_COMMITTER_DATE="2025-05-23 10:15:00" git tag -a v2.3.0 -m "v2.3.0: Caching & Compression"
+```
+
+### ✅ 완료 기준
+- [ ] 캐시 매니저 설정 완료
+- [ ] @Cacheable 적용된 서비스 동작
+- [ ] 캐시 무효화 동작
+- [ ] Gzip 압축 활성화
+- [ ] 모든 테스트 통과

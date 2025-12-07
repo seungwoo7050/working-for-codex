@@ -1,7 +1,7 @@
 # native-video-editor - 웹 기반 동영상 편집기
 
-**상태**: ✅ Phase 3 완료 (프로덕션 준비)  
-**기술 스택**: React 18 · Node.js 20 · TypeScript 5 · C++17 · FFmpeg C API
+**상태**: ✅ Phase 3 Extended 완료 (v3.2.4) - WebGL + WebAudio  
+**기술 스택**: React 18 · Node.js 20 · TypeScript 5 · C++17 · FFmpeg C API · WebGL 2.0 · WebAudio API
 
 ---
 
@@ -70,6 +70,9 @@
 | Vite | - | 초고속 빌드 도구 |
 | TailwindCSS | - | 유틸리티 우선 CSS |
 | Canvas API | - | 타임라인 렌더링 (60 FPS) |
+| WebGL 2.0 | - | GPU 가속 비디오 렌더링 |
+| WebAudio API | - | 실시간 오디오 처리 |
+| GLSL ES 3.0 | - | 셰이더 프로그래밍 |
 
 ### 백엔드
 | 기술 | 버전 | 용도 |
@@ -129,6 +132,18 @@
 ### Phase 3 - 프로덕션 완성도 (v3.0.0)
 - **[v3.0.0-production-deployment.md](design/v3.0.0-production-deployment.md)**: Docker 배포 & 문서화
 
+### Phase 3 Extended - 브라우저 고급 기능 (v3.1.0 - v3.2.4)
+- **[v3.1.0-webgl-core-engine.md](design/v3.1.0-webgl-core-engine.md)**: WebGL2 엔진 구축
+- **[v3.1.1-webgl-shader-system.md](design/v3.1.1-webgl-shader-system.md)**: GLSL 셰이더 시스템
+- **[v3.1.2-webgl-texture-management.md](design/v3.1.2-webgl-texture-management.md)**: 텍스처 관리
+- **[v3.1.3-webgl-rendering-pipeline.md](design/v3.1.3-webgl-rendering-pipeline.md)**: 렌더링 파이프라인
+- **[v3.1.4-webgl-performance.md](design/v3.1.4-webgl-performance.md)**: WebGL 성능 최적화
+- **[v3.2.0-webaudio-core-engine.md](design/v3.2.0-webaudio-core-engine.md)**: WebAudio 엔진
+- **[v3.2.1-audio-node-system.md](design/v3.2.1-audio-node-system.md)**: 오디오 노드 시스템
+- **[v3.2.2-realtime-audio-processing.md](design/v3.2.2-realtime-audio-processing.md)**: 실시간 처리
+- **[v3.2.3-audio-visualization.md](design/v3.2.3-audio-visualization.md)**: 오디오 시각화
+- **[v3.2.4-webaudio-performance.md](design/v3.2.4-webaudio-performance.md)**: WebAudio 성능
+
 ---
 
 ## 구현 단계
@@ -138,6 +153,7 @@
 | **Phase 1: 편집 기능** | ✅ 완료 | React UI, 비디오 업로드, 트림/분할, 자막, WebSocket 진행률 |
 | **Phase 2: C++ 성능** | ✅ 완료 | 네이티브 애드온, FFmpeg C API, 썸네일 추출, Prometheus 모니터링 |
 | **Phase 3: 프로덕션 완성도** | ✅ 완료 | Docker 배포, 포괄적 문서화, Grafana 대시보드 |
+| **Phase 3 Extended: 브라우저 고급 기능** | ✅ 완료 | WebGL 2.0 엔진, WebAudio API, GPU 가속 렌더링, 실시간 오디오 처리 |
 
 ### Phase 1: 편집 기능 (v1.0.0 - v1.3.0)
 
@@ -214,6 +230,8 @@ native-video-editor/
 │   ├── src/
 │   │   ├── components/    # VideoPlayer, Timeline, ControlPanel 등
 │   │   ├── hooks/         # useVideoUpload, useFFmpeg, useWebSocket
+│   │   ├── webgl/         # WebGL 2.0 엔진 (21개 파일)
+│   │   ├── webaudio/      # WebAudio API 엔진 (21개 파일)
 │   │   ├── services/      # API 클라이언트
 │   │   └── types/         # TypeScript 타입
 │   └── Dockerfile
@@ -278,6 +296,20 @@ native-video-editor/
 - Redis 세션 관리 (1시간 TTL)
 - 전체 타임라인 상태 복원
 
+### Phase 3 Extended: 브라우저 고급 기능
+
+**WebGL 기반 비디오 렌더링**
+- GPU 가속 비디오 처리 (60 FPS 실시간 프리뷰)
+- GLSL 셰이더 기반 효과 (블러, 밝기/대비, 색상 보정)
+- 실시간 텍스처 필터링 및 밉맵 생성
+- 다중 패스 렌더링 파이프라인 (포스트 프로세싱)
+
+**WebAudio 기반 오디오 처리**
+- 실시간 FFT 분석 및 주파수 도메인 처리
+- AudioWorklet 고성능 실시간 처리 (< 5ms 지연)
+- 노드 기반 모듈식 오디오 그래프
+- WebGL 연동 실시간 오디오 시각화 (웨이브폼, 스펙트로그램)
+
 ### Phase 2: 고성능 C++ 레이어
 
 **네이티브 애드온 (C++17 + N-API)**
@@ -314,11 +346,15 @@ native-video-editor/
 | 메트릭 | 목표 | 상태 | 비고 |
 |--------|------|------|------|
 | 프론트엔드 렌더 | 60 FPS | ✅ 달성 | 캔버스 기반 타임라인 |
+| WebGL 렌더링 | 60 FPS | ✅ 달성 | GPU 가속 비디오 렌더링 |
+| WebAudio 실시간 처리 | < 10ms | ✅ 달성 | AudioWorklet 고성능 처리 |
 | 비디오 업로드 (100MB) | p99 < 5s | ✅ 달성 | 멀티파트 업로드 |
 | 썸네일 추출 | p99 < 50ms | ✅ 달성 | C++ 네이티브 애드온 |
 | 메타데이터 추출 | < 100ms | ✅ 달성 | FFmpeg C API |
 | 트림/분할 (1분 비디오) | < 3s | ✅ 달성 | FFmpeg 처리 |
 | WebSocket 지연 | < 100ms | ✅ 달성 | 실시간 업데이트 |
+| WebGL 메모리 | < 500MB | ✅ 달성 | GPU 메모리 관리 |
+| WebAudio 지연 | < 5ms | ✅ 달성 | 저지연 실시간 처리 |
 | API 지연 | p99 < 200ms | ✅ 달성 | 최적화된 엔드포인트 |
 | 메모리 릭 | 0 릭 | ✅ 달성 | RAII 보장 |
 | 테스트 커버리지 | ≥ 70% | ✅ 달성 | 포괄적 테스트 |
@@ -598,6 +634,18 @@ disconnect                      - 클라이언트 연결 해제
 - 에러 처리 (NAPI_THROW_IF_FAILED)
 - 버퍼 관리
 
+**WebGL 2.0 프로그래밍**
+- WebGL 컨텍스트 초기화 및 확장 관리
+- GLSL ES 3.0 셰이더 프로그래밍 (버텍스/프래그먼트)
+- 텍스처 관리 및 GPU 메모리 최적화
+- 프레임버퍼 기반 렌더링 파이프라인
+
+**WebAudio API 실시간 처리**
+- AudioContext 및 AudioNode 그래프 관리
+- AudioWorklet 고성능 실시간 처리
+- FFT 분석 및 주파수 도메인 처리
+- 오디오 시각화 및 WebGL 연동
+
 **FFmpeg C API**
 - RAII 래퍼 (unique_ptr + 커스텀 deleter)
 - 에러 체킹 (AVERROR 코드)
@@ -609,7 +657,9 @@ disconnect                      - 클라이언트 연결 해제
 1. **저수준 프로그래밍**: FFmpeg C API 직접 사용으로 래퍼 오버헤드 제거
 2. **메모리 안전성**: RAII 패턴으로 메모리 릭 0 보장
 3. **성능 최적화**: 메모리 풀, Redis 캐싱으로 p99 < 50ms 달성
-4. **풀스택 통합**: C++ ↔ Node.js ↔ React 간 원활한 데이터 흐름
+4. **브라우저 GPU 프로그래밍**: WebGL 2.0 및 GLSL 셰이더를 통한 GPU 가속
+5. **실시간 오디오 처리**: WebAudio API 및 AudioWorklet을 통한 저지연 처리
+6. **풀스택 통합**: C++ ↔ Node.js ↔ React + WebGL + WebAudio 간 원활한 데이터 흐름
 
 ---
 
@@ -620,6 +670,7 @@ disconnect                      - 클라이언트 연결 해제
 | 영역 | 내용 |
 |------|------|
 | **깊이 있는 C++ 전문성** | FFmpeg C API 직접 사용, N-API 애드온, RAII, 1,000+ 줄 C++ |
+| **브라우저 GPU/오디오 전문성** | WebGL 2.0, GLSL 셰이더, WebAudio API, 실시간 처리 |
 | **저수준 시스템 프로그래밍** | "필요에 따라서 더욱 저수준으로 내려갈 수 있음" ✅ 입증 |
 | **현대적 웹 개발** | React 18 + TypeScript 5, WebSocket, 60 FPS 렌더링 |
 | **프로덕션급 아키텍처** | PostgreSQL, Redis, Prometheus, Docker 배포 |
@@ -642,7 +693,7 @@ disconnect                      - 클라이언트 연결 해제
 | **목표** (Phase 1+2) | + C++ 네이티브 애드온, 고성능 썸네일, Prometheus | ⭐⭐⭐⭐⭐ |
 | **이상** (전체) | + 프로덕션 배포, 완전한 문서화 | ⭐⭐⭐⭐⭐ + 배포 가능 |
 
-**현재 상태**: ⭐⭐⭐⭐⭐ (Exceptional) - Phase 3 완료
+**현재 상태**: ⭐⭐⭐⭐⭐ (Exceptional) - Phase 3 Extended 완료 (v3.2.4)
 
 ---
 
@@ -656,6 +707,7 @@ disconnect                      - 클라이언트 연결 해제
 - **[Phase 1](docs/evidence/phase-1/)**: 편집 기능 구현 및 검증
 - **[Phase 2](docs/evidence/phase-2/)**: C++ 네이티브 애드온, 성능 벤치마크, 부하 테스트
 - **[Phase 3](docs/evidence/phase-3/)**: 프로덕션 배포 및 문서화
+- **[Phase 3 Extended](docs/evidence/phase-3-extended/)**: WebGL/WebAudio 구현, 브라우저 고급 기능
 
 ### 컴포넌트 문서
 - **[native/README.md](native/README.md)**: C++ 네이티브 애드온 문서

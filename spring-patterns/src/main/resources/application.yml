@@ -2,9 +2,20 @@ spring:
   application:
     name: web-phase1-5
 
+  # v2.1: Virtual Threads 활성화 (Java 21+)
+  threads:
+    virtual:
+      enabled: true
+
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # v2.0: R2DBC 설정 (reactive 프로파일에서 활성화)
+  r2dbc:
+    url: r2dbc:h2:mem:///testdb
     username: sa
     password:
 

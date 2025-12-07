@@ -19,10 +19,15 @@
 | 6 | `006_async-events/` | v1.4.0 | 1.4.1 ~ 1.4.5 | Order 도메인, Kafka Producer/Consumer, 비동기 이벤트 | ⚠️ |
 | 7 | `007_production-infra/` | v1.5.0 | 1.5.1 ~ 1.5.5 | PostgreSQL, Redis 캐시, Docker Compose, 멀티스테이지 빌드 | ⚠️ |
 | 8 | `008_api-gateway/` | v1.6.0 | 1.6.1 ~ 1.6.5 | Spring Cloud Gateway, 라우팅, 로깅 필터, CORS | ⚠️ |
+| 9 | `009_webflux-r2dbc/` | v2.0.0 | 2.0.1 ~ 2.0.5 | Spring WebFlux, R2DBC, 리액티브 스택, SSE | ⚠️ |
+| 10 | `010_virtual-threads/` | v2.1.0 | 2.1.1 ~ 2.1.5 | Java 21, Virtual Threads, 하이브리드 서비스 | ⚠️ |
+| 11 | `011_rate-limiting/` | v2.2.0 | 2.2.1 ~ 2.2.5 | Token Bucket, Rate Limiting, X-RateLimit 헤더 | ✅ |
+| 12 | `012_caching-compression/` | v2.3.0 | 2.3.1 ~ 2.3.5 | Spring Cache, @Cacheable, Gzip 압축, 캐시 관리 | ✅ |
 
 ### 범례
 - ✅ 완전 빌드/테스트 가능
 - ⚠️ 일부 외부 의존성 필요 (Elasticsearch, Kafka 등)
+- 🚧 진행 중
 
 ---
 
@@ -230,7 +235,22 @@ v0.1.0 (001_bootstrap)
                                               └─ + API Gateway
                                                      │
                                                      v
-                                                 v1.6.0 (최종 - 루트 디렉토리)
+                                                 v1.6.0 (008_api-gateway)
+                                                     │
+                                                     └─ + WebFlux, R2DBC
+                                                            │
+                                                            v
+                                                        v2.0.0 (009_webflux-r2dbc)
+                                                            │
+                                                            └─ + Virtual Threads
+                                                                   │
+                                                                   v
+                                                               v2.1.0 (010_virtual-threads)
+                                                            │
+                                                            └─ + Rate Limiting
+                                                                   │
+                                                                   v
+                                                               v2.2.0 (011_rate-limiting)
 ```
 
 ---
@@ -254,6 +274,9 @@ v0.1.0 (001_bootstrap)
 6. `006_async-events` → 이벤트 기반 아키텍처
 7. `007_production-infra` → Docker, PostgreSQL, Redis
 8. `008_api-gateway` → Spring Cloud Gateway, 마이크로서비스 준비
+9. `009_webflux-r2dbc` → WebFlux, R2DBC, 리액티브 프로그래밍
+10. `010_virtual-threads` → Java 21, Virtual Threads, 하이브리드
+11. `011_rate-limiting` → Token Bucket, 속도 제한
 
 ---
 

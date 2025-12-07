@@ -1,7 +1,7 @@
-# Web Phase 1.5 – Spring 패턴 훈련 (2.0–2.6)
+# Spring Patterns Training (v1.0–v2.6)
 
-**상태**: 📝 설계 완료 (v0.1.0 - 2.6)
-**기술 스택**: Spring Boot 3.x · Java 17 · JPA · PostgreSQL · Redis · Kafka · Elasticsearch
+**상태**: 📝 설계 완료 (v0.1.0 - v2.6), v2.3 완료
+**기술 스택**: Spring Boot 3.3.5 · Java 17 · WebFlux · R2DBC · PostgreSQL · Redis · Kafka · Elasticsearch
 
 ---
 
@@ -16,6 +16,11 @@
 - **[v1.3.0](design/v1.3.0-elasticsearch.md)**: Elasticsearch 검색
 - **[v1.4.0](design/v1.4.0-async-events.md)**: Kafka 비동기 이벤트 처리
 - **[v1.5.0](design/v1.5.0-production-infra.md)**: Docker, PostgreSQL, Redis 인프라
+- **[v1.6.0](design/v1.6.0-api-gateway.md)**: API Gateway (Spring Cloud Gateway)
+- **[v2.0.0](design/v2.0.0-webflux-r2dbc.md)**: WebFlux 전환 & R2DBC
+- **[v2.1.0](design/v2.1.0-virtual-threads.md)**: Virtual Threads
+- **[v2.2.0](design/v2.2.0-rate-limiting.md)**: Rate Limiting
+- **[v2.3.0](design/v2.3.0-caching-compression.md)**: Caching & Compression
 
 ---
 
@@ -27,15 +32,17 @@
 * 이제 실제 현업에서 많이 쓰는 **Spring Boot 기반 웹 백엔드 패턴**을
   **작은 도메인**에 반복 적용하는 훈련을 한다.
 * v1.5.0에서는 **프로덕션 인프라**(PostgreSQL, Redis, Docker)를 추가한다.
+* v1.6.0에서는 **API Gateway**(Spring Cloud Gateway)를 추가한다.
+* v2.x 단계에서는 **리액티브 전환**(WebFlux, R2DBC), **고성능 최적화**(Virtual Threads, Rate Limiting, Caching, Performance Benchmark)를 통해 현대적인 Spring 백엔드 패턴을 훈련한다.
 * 이 2.x 단계 이후에 **spring-commerce(이커머스 프로덕트)**로 넘어간다.
 
 **핵심 포인트**
 
-* **단일 Spring Boot 프로젝트**에서 2.0 ~ 2.6을 순차적으로 확장한다.
-* **2.0에서 CI를 세팅**해두고,
+* **단일 Spring Boot 프로젝트**에서 v1.0 ~ v2.6을 순차적으로 확장한다.
+* **v0.1.0에서 CI를 세팅**해두고,
   이후 마일스톤마다 **해당 마일스톤 수준의 테스트를 추가**해서
   GitHub push 시마다 자동으로 검증되게 한다.
-* **2.6에서 프로덕션 준비** 완료: Docker, PostgreSQL, Redis 통합
+* **v2.6에서 고성능 리액티브 API 준비 완료**: WebFlux, R2DBC, Virtual Threads, Rate Limiting, Caching, Performance Benchmark
 
 ---
 
@@ -44,17 +51,22 @@
 ### 기술 스택(권장)
 
 * 언어: Java 17
-* 프레임워크: Spring Boot 3.x
+* 프레임워크: Spring Boot 3.3.5 (v1.x: MVC, v2.x: WebFlux)
 * 빌드: Gradle 또는 Maven (둘 중 아무거나, 예시는 Gradle 기준으로 적는다)
 * DB:
 
   * 개발/테스트: H2 (in-memory)
   * 실제 서비스 상상: PostgreSQL (프로덕션용 설정만 베이스로 잡아두면 됨)
+  * v2.x: R2DBC (리액티브 DB 연결)
+* 캐시: Redis (Spring Cache + Redis)
+* 메시징: Kafka (비동기 이벤트)
+* 검색: Elasticsearch
+* API Gateway: Spring Cloud Gateway (v1.6+)
 * 테스트:
 
   * JUnit 5
   * Spring Boot Test
-  * 필요 시 MockMvc/WebTestClient
+  * 필요 시 MockMvc/WebTestClient, Testcontainers
 
 ### 프로젝트 구조(예시)
 
@@ -70,11 +82,17 @@ web-phase1-5/
         com/example/training/
           Application.java        // 부트스트랩
           common/                 // 공통 (config, error, health 등)
-          issue/                  // 2.1
-          team/                   // 2.2
-          stats/                  // 2.3
-          search/                 // 2.4
-          order/                  // 2.5
+          issue/                  // v1.1
+          team/                   // v1.2
+          stats/                  // v1.3
+          search/                 // v1.4
+          order/                  // v1.5
+          gateway/                // v1.6 (Spring Cloud Gateway)
+          reactive/               // v2.x 리액티브 전환
+            product/              // v2.0 WebFlux & R2DBC
+            cache/                // v2.3 Caching & Compression
+            rate/                 // v2.2 Rate Limiting
+            perf/                 // v2.4 Performance & Benchmark
       resources/
         application.yml
         application-local.yml
@@ -95,7 +113,8 @@ web-phase1-5/
 * 브랜치 전략(예시):
 
   * `main`: 항상 빌드/테스트 통과 상태
-  * `feature/2.1-issue`, `feature/2.2-team` 같은 식으로 작업 브랜치
+  * `feature/v1.1-issue`, `feature/v1.2-team` 같은 식으로 작업 브랜치 (v1.x)
+  * `feature/v2.0-webflux`, `feature/v2.3-cache` 같은 식으로 작업 브랜치 (v2.x)
 * CI:
 
   * `.github/workflows/ci.yml` 하나
@@ -763,4 +782,122 @@ docker exec -it redis redis-cli KEYS '*'
 * [ ] 기존 모든 테스트 통과
 
 **상세 설계:** `design/v1.5.0-production-infra.md` 참고
+
+---
+
+## v2.0.0 – WebFlux 전환 & R2DBC
+
+**목표**
+
+* 블로킹 MVC에서 **리액티브 WebFlux**로 전환한다.
+* JPA 대신 **R2DBC**를 사용하여 비동기 DB 접근을 구현한다.
+
+### 주요 변경
+
+1. **WebFlux 의존성 추가**
+   * `spring-boot-starter-webflux` 추가
+   * MVC 컨트롤러를 WebFlux로 전환
+
+2. **R2DBC Repository**
+   * JPA → R2DBC 전환
+   * `ReactiveCrudRepository` 사용
+
+3. **리액티브 컨트롤러 & 서비스**
+   * `Mono<T>`, `Flux<T>` 반환
+   * 비동기 스트리밍 지원
+
+### 완료 기준
+
+* [ ] WebFlux 전환 완료
+* [ ] R2DBC 리포지토리 구현
+* [ ] SSE(Server-Sent Events) 지원
+* [ ] 기존 테스트 통과
+
+**상세 설계:** `design/v2.0.0-webflux-r2dbc.md` 참고
+
+---
+
+## v2.1.0 – Virtual Threads
+
+**목표**
+
+* Java 21 **Virtual Threads**를 통합하여 고성능 동시성을 구현한다.
+* 블로킹 코드를 Virtual Threads로 래핑한다.
+
+### 주요 구현
+
+1. **Virtual Threads 설정**
+   * Tomcat Virtual Threads 활성화
+   * `VirtualThreadConfig.java`
+
+2. **블로킹 코드 래핑**
+   * 외부 API 호출을 Virtual Threads로 실행
+
+### 완료 기준
+
+* [ ] Virtual Threads 설정 완료
+* [ ] 블로킹 코드 Virtual Threads 적용
+* [ ] 외부 API 병렬 호출 구현
+
+**상세 설계:** `design/v2.1.0-virtual-threads.md` 참고
+
+---
+
+## v2.2.0 – Rate Limiting
+
+**목표**
+
+* **Redis 기반 분산 Rate Limiter**를 구현한다.
+* 클라이언트별 요청 제한을 적용한다.
+
+### 주요 구현
+
+1. **Rate Limiting 필터**
+   * `RateLimitingFilter.java`
+   * Redis Lua 스크립트 사용
+
+2. **클라이언트 식별**
+   * IP 또는 API Key 기반
+
+3. **Rate Limit 헤더**
+   * `X-RateLimit-*` 헤더 반환
+
+### 완료 기준
+
+* [ ] Redis Rate Limiter 구현
+* [ ] 클라이언트별 제한 적용
+* [ ] 헤더 응답 추가
+
+**상세 설계:** `design/v2.2.0-rate-limiting.md` 참고
+
+---
+
+## v2.3.0 – Caching & Compression
+
+**목표**
+
+* **Redis 캐싱**과 **HTTP 압축**을 구현하여 응답 성능을 최적화한다.
+
+### 주요 구현
+
+1. **Redis Cache 설정**
+   * `CachingConfig.java`
+   * TTL 설정
+
+2. **@Cacheable 적용**
+   * 핫 데이터 캐싱
+   * 캐시 무효화 전략
+
+3. **Gzip 압축**
+   * `CompressionConfig.java`
+   * 1KB+ 응답 압축
+
+### 완료 기준
+
+* [x] Redis 캐시 설정 완료
+* [x] @Cacheable 적용
+* [x] Gzip 압축 구현
+* [x] 테스트 통과
+
+**상세 설계:** `design/v2.3.0-caching-compression.md` 참고
 
