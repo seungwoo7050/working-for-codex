@@ -96,11 +96,12 @@ export class AudioPerformanceProfiler {
   getMetrics(): AudioPerformanceMetrics {
     const avgCallbackTime = this.calculateAverageCallbackTime();
     const processingLoad = this.estimateProcessingLoad();
+    const contextWithLatency = this.context as AudioContext & { outputLatency?: number };
 
     return {
       contextTime: this.context.currentTime,
       baseLatency: this.context.baseLatency,
-      outputLatency: (this.context as any).outputLatency ?? 0,
+      outputLatency: 'outputLatency' in this.context ? contextWithLatency.outputLatency ?? 0 : 0,
       bufferUnderruns: this.bufferUnderruns,
       processingLoad,
       averageCallbackTime: avgCallbackTime,
@@ -129,8 +130,9 @@ export class AudioPerformanceProfiler {
 
   getLatencyInfo(): { input: number; output: number; total: number } {
     const base = this.context.baseLatency;
-    const output = (this.context as any).outputLatency ?? 0;
-    
+    const contextWithLatency = this.context as AudioContext & { outputLatency?: number };
+    const output = 'outputLatency' in this.context ? contextWithLatency.outputLatency ?? 0 : 0;
+
     return {
       input: base,
       output,

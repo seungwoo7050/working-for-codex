@@ -16,10 +16,10 @@ export { UniformBinder } from './UniformBinder';
 export { ShaderCache } from './ShaderCache';
 
 // Texture Management (v3.1.2)
-export { VideoTexture, type VideoTextureOptions } from './VideoTexture';
-export { TextureFilter, FilterMode, WrapMode } from './TextureFilter';
+export { VideoTexture } from './VideoTexture';
+export { TextureFilter, type FilterMode, type WrapMode } from './TextureFilter';
 export { MipmapGenerator } from './MipmapGenerator';
-export { TextureCompressor, type CompressionSupport } from './TextureCompressor';
+export { TextureCompressor, type CompressionInfo } from './TextureCompressor';
 
 // Rendering Pipeline (v3.1.3)
 export { Framebuffer, type FramebufferOptions } from './Framebuffer';
