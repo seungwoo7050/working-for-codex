@@ -40,6 +40,7 @@ add_executable(unit_tests
     tests/unit/test_textures.cpp
     tests/unit/test_geometry.cpp
     tests/unit/test_pdf.cpp
+    tests/unit/test_onb.cpp
 )
 
 target_include_directories(unit_tests PRIVATE src)
