@@ -26,9 +26,10 @@ class ExternalApiServiceTest {
             .baseUrl(mockWebServer.url("/").toString())
             .build();
 
-        // We'll need to modify ExternalApiService to accept base URL for testing
-        // For now, this tests the structure
-        externalApiService = new ExternalApiService(webClient);
+        externalApiService = new ExternalApiService(
+            webClient,
+            mockWebServer.url("/posts/1").toString()
+        );
     }
 
     @AfterEach

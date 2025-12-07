@@ -2,6 +2,7 @@ package com.example.training.common.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
@@ -16,23 +17,30 @@ import java.util.Map;
 public class ExternalApiService {
 
     private static final Logger log = LoggerFactory.getLogger(ExternalApiService.class);
-    private static final String EXTERNAL_API_URL = "https://jsonplaceholder.typicode.com/posts/1";
+    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(3);
+    private static final Duration RETRY_DELAY = Duration.ofMillis(200);
 
     private final WebClient webClient;
+    private final String externalApiUrl;
 
-    public ExternalApiService(WebClient webClient) {
+    public ExternalApiService(
+        WebClient webClient,
+        @Value("${external.api.url:https://jsonplaceholder.typicode.com/posts/1}") String externalApiUrl
+    ) {
         this.webClient = webClient;
+        this.externalApiUrl = externalApiUrl;
     }
 
     public Map<String, Object> fetchExternalData() {
-        log.info("Fetching data from external API: {}", EXTERNAL_API_URL);
+        log.info("Fetching data from external API: {}", externalApiUrl);
 
         try {
             Map<String, Object> response = webClient.get()
-                .uri(EXTERNAL_API_URL)
+                .uri(externalApiUrl)
                 .retrieve()
                 .bodyToMono(Map.class)
-                .retryWhen(Retry.fixedDelay(3, Duration.ofSeconds(1))
+                .timeout(REQUEST_TIMEOUT)
+                .retryWhen(Retry.fixedDelay(3, RETRY_DELAY)
                     .doBeforeRetry(retrySignal ->
                         log.warn("Retrying request, attempt: {}", retrySignal.totalRetries() + 1)
                     )
