@@ -4,8 +4,8 @@
 
 1. `spring-patterns/` - Spring 기반의 백엔드 서비스 프로젝트
 2. `native-video-editor/` - 네이티브 기반의 비디오 편집기 프로젝트
-3. `modern-irc` - c++ 17 기반의 IRC 서버 프로젝트
-4. 
+3. `modern-irc` - C++17 기반의 IRC 서버 프로젝트
+4. `ray-tracer` - C++17 기반의 레이 트레이싱 렌더러 프로젝트
 
 두 프로젝트의 최종 버전정보는 CLONE-GUIDE.md 파일에 명시되어 있습니다.
 
