@@ -2,6 +2,8 @@
 
 ![CI Status](https://github.com/seungwoo7050/study-ray-tracer/workflows/Ray%20Tracer%20CI/badge.svg)
 
+> 테스트/CI: Google Test 기반 단위 테스트를 `ctest`로 실행하며 GitHub Actions(`.github/workflows/ci.yml`)에서 CMake 구성 후 자동화됩니다. 포트폴리오 요약은 [PORTFOLIO.md](../PORTFOLIO.md)에서 확인 가능합니다.
+
 Peter Shirley의 ["Ray Tracing in One Weekend"](https://raytracing.github.io/) 시리즈를 C++17로 완전 구현한 프로젝트입니다. Monte Carlo 적분과 중요도 샘플링을 포함한 고급 렌더링 기법을 학습합니다.
 
 ---
