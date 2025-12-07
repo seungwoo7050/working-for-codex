@@ -21,7 +21,11 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
-@SpringBootTest
+@SpringBootTest(properties = {
+        "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration,org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchDataAutoConfiguration,org.springframework.boot.autoconfigure.data.elasticsearch.ElasticsearchRepositoriesAutoConfiguration",
+        "spring.kafka.bootstrap-servers=${spring.embedded.kafka.brokers}",
+        "test.kafka.mock=false"
+})
 @ActiveProfiles("test")
 @EmbeddedKafka(partitions = 3, brokerProperties = {
         "listeners=PLAINTEXT://localhost:9092",

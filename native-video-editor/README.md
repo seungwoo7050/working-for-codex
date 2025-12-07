@@ -356,6 +356,8 @@ native-video-editor/
 - **Docker** 및 **Docker Compose** (권장)
 - **Node.js 20+** (로컬 개발용)
 - **FFmpeg 6.0+** (로컬 개발용)
+  - Ubuntu/Debian 계열: `sudo apt-get install -y ffmpeg`
+  - 백엔드 통합 테스트에서 썸네일/메타데이터 추출을 위해 CLI 바이너리가 필요합니다.
 
 ### 옵션 1: Docker 배포 (권장)
 
