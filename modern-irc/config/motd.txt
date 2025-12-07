@@ -1,0 +1,21 @@
+╔═══════════════════════════════════════════════════════════╗
+║                  Welcome to IRC Server                    ║
+║                  Phase 3 - Full Implementation            ║
+╚═══════════════════════════════════════════════════════════╝
+
+This server implements the IRC protocol based on RFC 1459, 2810-2813
+
+Features:
+  • Full channel management with modes
+  • Operator commands (KICK, INVITE, TOPIC, MODE)
+  • Server administration (OPER, KILL, REHASH)
+  • Statistics and monitoring (STATS, INFO, LUSERS)
+  • Rate limiting and flood protection
+  • Comprehensive logging
+  • Topic persistence
+
+For help, type /HELP
+For server info, type /INFO
+For user statistics, type /LUSERS
+
+Enjoy your stay!
