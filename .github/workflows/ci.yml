@@ -37,7 +37,10 @@ jobs:
         run: npm ci
       - name: Run backend tests
         working-directory: native-video-editor/backend
-        run: npm test -- --runInBand
+        run: npm test -- --runInBand --detectOpenHandles
+      - name: Build backend
+        working-directory: native-video-editor/backend
+        run: npm run build
 
   native-video-editor-frontend:
     runs-on: ubuntu-latest
@@ -54,6 +57,9 @@ jobs:
       - name: Install frontend dependencies
         working-directory: native-video-editor/frontend
         run: npm ci
+      - name: Run frontend tests
+        working-directory: native-video-editor/frontend
+        run: npm test
       - name: Lint and build frontend
         working-directory: native-video-editor/frontend
         run: |
