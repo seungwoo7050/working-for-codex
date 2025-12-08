@@ -1,7 +1,8 @@
 # Spring Patterns Training (v1.0–v2.6)
 
-**상태**: 📝 설계 완료 (v0.1.0 - v2.6), v2.3 완료
-**기술 스택**: Spring Boot 3.3.5 · Java 17 · WebFlux · R2DBC · PostgreSQL · Redis · Kafka · Elasticsearch
+**상태**: ✅ 빌드/테스트 완료 (v0.1.0 - v2.3), v2.3 구현 완료
+**기술 스택**: Spring Boot 3.3.5 · Java 21 · WebFlux · R2DBC · PostgreSQL · Redis · Kafka · Elasticsearch
+**마지막 빌드**: 2025-12-09 ✅ 성공
 
 ---
 
@@ -50,7 +51,7 @@
 
 ### 기술 스택(권장)
 
-* 언어: Java 17
+* 언어: Java 21 (Virtual Threads 지원)
 * 프레임워크: Spring Boot 3.3.5 (v1.x: MVC, v2.x: WebFlux)
 * 빌드: Gradle 또는 Maven (둘 중 아무거나, 예시는 Gradle 기준으로 적는다)
 * DB:
@@ -125,7 +126,7 @@ web-phase1-5/
   * 최소 단계:
 
     1. checkout
-    2. JDK 17 세팅
+    2. JDK 21 세팅
     3. `./gradlew clean test` (또는 `mvn test`)
     4. (옵션) JaCoCo 리포트 생성
 

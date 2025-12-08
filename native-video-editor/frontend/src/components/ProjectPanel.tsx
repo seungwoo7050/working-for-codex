@@ -1,7 +1,21 @@
+// [FILE]
+// - 목적: 프로젝트 저장/불러오기 UI 컴포넌트
+// - 주요 역할: 프로젝트 목록 표시, 저장, 삭제, 불러오기
+// - 관련 클론 가이드 단계: [CG-v1.3.0] WebSocket/영속화
+// - 권장 읽는 순서: useProjects.ts 훅과 함께
+//
+// [LEARN] C 개발자를 위한 CRUD UI 패턴:
+// - CRUD (Create, Read, Update, Delete): 데이터 조작의 기본 패턴
+// - 각 작업에 대응하는 API 호출 함수를 훅에서 제공받는다.
+// - 상태 변경 후 목록을 다시 불러와 UI를 동기화한다.
+
 import { useState, useEffect } from 'react';
 import { useProjects, Project } from '../hooks/useProjects';
 import { VideoMetadata } from '../types/video';
 
+// [LEARN] Props 인터페이스
+// - video: 현재 편집 중인 비디오 (저장 시 필요)
+// - onProjectLoad: 프로젝트 불러오기 콜백
 interface ProjectPanelProps {
   video: VideoMetadata | null;
   onProjectLoad: (project: Project) => void;
@@ -11,21 +25,29 @@ interface ProjectPanelProps {
  * Project management panel for saving and loading projects
  */
 export function ProjectPanel({ video, onProjectLoad }: ProjectPanelProps) {
+  // [LEARN] 커스텀 훅으로 API 로직 분리
+  // - useProjects()가 API 호출과 로딩 상태를 관리한다.
+  // - 컴포넌트는 UI 렌더링에만 집중할 수 있다.
   const { createProject, getProjects, deleteProject, loading } = useProjects();
   const [projects, setProjects] = useState<Project[]>([]);
   const [projectName, setProjectName] = useState('');
   const [showSaveForm, setShowSaveForm] = useState(false);
 
+  // [LEARN] 프로젝트 목록 로드 함수
   const loadProjects = async () => {
     const fetchedProjects = await getProjects();
     setProjects(fetchedProjects);
   };
 
+  // [LEARN] 컴포넌트 마운트 시 프로젝트 목록 로드
+  // - 빈 의존성 배열 []로 마운트 시 1회만 실행한다.
+  // - eslint-disable는 의도적으로 의존성을 제외할 때 사용한다.
   useEffect(() => {
     loadProjects();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // [LEARN] 프로젝트 저장 핸들러
   const handleSave = async () => {
     if (!video || !projectName.trim()) {
       alert('Please enter a project name');
@@ -42,6 +64,8 @@ export function ProjectPanel({ video, onProjectLoad }: ProjectPanelProps) {
       },
     });
 
+    // [LEARN] 저장 성공 후 UI 정리
+    // - 폼 초기화, 저장 폼 닫기, 목록 새로고침
     if (project) {
       setProjectName('');
       setShowSaveForm(false);
@@ -49,6 +73,8 @@ export function ProjectPanel({ video, onProjectLoad }: ProjectPanelProps) {
     }
   };
 
+  // [LEARN] 프로젝트 삭제 핸들러
+  // - confirm()으로 사용자 확인 후 삭제한다.
   const handleDelete = async (id: number) => {
     if (confirm('Are you sure you want to delete this project?')) {
       const success = await deleteProject(id);

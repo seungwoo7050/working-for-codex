@@ -1,0 +1,58 @@
+add_library(pvpserver_lib
+    anticheat/anomaly_detector.cpp
+    anticheat/ban_service.cpp
+    anticheat/hit_validator.cpp
+    anticheat/movement_validator.cpp
+    anticheat/replay_recorder.cpp
+    core/config.cpp
+    core/game_loop.cpp
+    distributed/consistent_hash.cpp
+    distributed/load_balancer.cpp
+    distributed/service_discovery.cpp
+    game/combat.cpp
+    game/game_session.cpp
+    game/projectile.cpp
+    matchmaking/match.cpp
+    matchmaking/match_request.cpp
+    matchmaking/match_queue.cpp
+    matchmaking/matchmaker.cpp
+    matchmaking/match_notification_channel.cpp
+    netcode/client_prediction.cpp
+    netcode/reconciliation.cpp
+    netcode/input_buffer.cpp
+    netcode/lag_compensation.cpp
+    network/metrics_http_server.cpp
+    network/profile_http_router.cpp
+    network/websocket_server.cpp
+    network/udp_socket.cpp
+    network/packet_types.cpp
+    network/udp_game_server.cpp
+    network/snapshot_manager.cpp
+    network/udp_metrics.cpp
+    network/packet_simulator.cpp
+    storage/postgres_storage.cpp
+    storage/session_store.cpp
+    storage/in_memory_session_store.cpp
+    storage/redis_session_store.cpp
+    stats/leaderboard_store.cpp
+    stats/match_stats.cpp
+    stats/player_profile_service.cpp
+)
+
+target_link_libraries(pvpserver_lib
+    PUBLIC
+        Boost::system
+        libpq::pq
+)
+
+add_executable(pvpserver
+    main.cpp
+)
+
+target_link_libraries(pvpserver
+    PRIVATE
+        pvpserver_lib
+        Boost::system
+        libpq::pq
+        protobuf::libprotobuf
+)

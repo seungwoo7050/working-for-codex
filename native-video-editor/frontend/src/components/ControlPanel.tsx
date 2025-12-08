@@ -1,3 +1,13 @@
+// [FILE]
+// - 목적: 비디오 편집 컨트롤 패널 (트림, 분할)
+// - 주요 역할: 편집 모드 선택, 시간 범위 설정, 편집 실행
+// - 관련 클론 가이드 단계: [CG-v1.1.0] Trim/Split
+// - 권장 읽는 순서: EditPanel.tsx 이후 참고용
+//
+// [LEARN] C 개발자를 위한 React 컴포넌트 구조:
+// - 이 컴포넌트는 EditPanel의 단순화된 버전이다.
+// - 트림과 분할 기능만 제공한다.
+
 import { useState, useEffect } from 'react';
 import { VideoMetadata } from '../types/video';
 import { useVideoEdit } from '../hooks/useVideoEdit';
@@ -23,6 +33,9 @@ export function ControlPanel({
 }: ControlPanelProps) {
   const { trimVideo, splitVideo, processing, error } = useVideoEdit();
 
+  // [LEARN] 유니온 타입 리터럴
+  // - mode는 'trim' 또는 'split' 문자열만 가질 수 있다.
+  // - C의 enum과 유사하지만 문자열 값을 사용한다.
   const [trimStart, setTrimStart] = useState(0);
   const [trimEnd, setTrimEnd] = useState(duration);
   const [splitTime, setSplitTime] = useState(duration / 2);

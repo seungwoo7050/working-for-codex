@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build pvpserver",
+			"type": "shell",
+			"command": "cd /Users/woopinbell/work/study-portpolio-overall/cpp-pvp-server/server && mkdir -p build && cd build && cmake .. && make -j4",
+			"isBackground": false,
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		}
+	]
+}

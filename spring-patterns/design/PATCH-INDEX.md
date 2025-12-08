@@ -113,6 +113,54 @@
 
 ---
 
+### v2.0.0 (WebFlux & R2DBC)
+
+| 패치 ID | 패치 이름 | 설계 문서 | 핵심 산출물 |
+|---------|-----------|-----------|-------------|
+| 2.0.1 | WebFlux & R2DBC 의존성 추가 | v2.0.0-webflux-r2dbc.md §3.1 | build.gradle |
+| 2.0.2 | R2DBC Repository 전환 | v2.0.0-webflux-r2dbc.md §3.2 | ProductR2dbcRepository.java |
+| 2.0.3 | 리액티브 컨트롤러 구현 | v2.0.0-webflux-r2dbc.md §3.3 | ReactiveProductController.java |
+| 2.0.4 | 리액티브 서비스 구현 | v2.0.0-webflux-r2dbc.md §3.4 | ReactiveProductService.java |
+| 2.0.5 | SSE 스트리밍 구현 | v2.0.0-webflux-r2dbc.md §3.5 | SSE 엔드포인트 |
+
+---
+
+### v2.1.0 (Virtual Threads)
+
+| 패치 ID | 패치 이름 | 설계 문서 | 핵심 산출물 |
+|---------|-----------|-----------|-------------|
+| 2.1.1 | Virtual Threads 설정 | v2.1.0-virtual-threads.md §3.1 | application.yml, VirtualThreadConfig |
+| 2.1.2 | 블로킹 코드 래핑 | v2.1.0-virtual-threads.md §3.2 | HybridProductService.java |
+| 2.1.3 | 레거시 시스템 어댑터 | v2.1.0-virtual-threads.md §3.3 | LegacySystemAdapter.java |
+| 2.1.4 | 외부 API 병렬 호출 | v2.1.0-virtual-threads.md §3.4 | ExternalApiClient.java |
+| 2.1.5 | Virtual Threads 테스트 | v2.1.0-virtual-threads.md §4 | VirtualThreadsTest.java |
+
+---
+
+### v2.2.0 (Rate Limiting)
+
+| 패치 ID | 패치 이름 | 설계 문서 | 핵심 산출물 |
+|---------|-----------|-----------|-------------|
+| 2.2.1 | Rate Limiting 필터 | v2.2.0-rate-limiting.md §3.1 | RateLimitingFilter.java |
+| 2.2.2 | 클라이언트 식별 | v2.2.0-rate-limiting.md §3.2 | ClientKeyResolver.java |
+| 2.2.3 | Token Bucket 구현 | v2.2.0-rate-limiting.md §3.3 | TokenBucketRateLimiter.java |
+| 2.2.4 | Rate Limit 헤더 | v2.2.0-rate-limiting.md §3.4 | X-RateLimit-* Headers |
+| 2.2.5 | Rate Limiting 테스트 | v2.2.0-rate-limiting.md §4 | RateLimitingTest.java |
+
+---
+
+### v2.3.0 (Caching & Compression)
+
+| 패치 ID | 패치 이름 | 설계 문서 | 핵심 산출물 |
+|---------|-----------|-----------|-------------|
+| 2.3.1 | 캐시 매니저 설정 | v2.3.0-caching-compression.md §2.1 | CachingConfig.java |
+| 2.3.2 | @Cacheable 적용 | v2.3.0-caching-compression.md §2.2 | CachedProductService.java |
+| 2.3.3 | 캐시 무효화 | v2.3.0-caching-compression.md §2.3 | @CacheEvict 적용 |
+| 2.3.4 | Gzip 압축 설정 | v2.3.0-caching-compression.md §3 | application.yml |
+| 2.3.5 | 캐싱/압축 테스트 | v2.3.0-caching-compression.md §4 | CachingTest.java |
+
+---
+
 ## 버전별 누적 기능 요약
 
 | 버전 | 새로운 기능 | 누적 패치 수 |
@@ -125,6 +173,12 @@
 | v1.4.0 | Kafka Events | 33 |
 | v1.5.0 | Docker, Production | 38 |
 | v1.6.0 | API Gateway | 43 |
+| v2.0.0 | WebFlux, R2DBC | 48 |
+| v2.1.0 | Virtual Threads | 53 |
+| v2.2.0 | Rate Limiting | 58 |
+| v2.3.0 | Caching, Compression | 63 |
+
+**마지막 검증**: 2025-12-09 ✅ 빌드/테스트 통과
 
 ---
 

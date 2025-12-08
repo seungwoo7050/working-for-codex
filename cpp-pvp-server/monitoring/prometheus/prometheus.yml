@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'cpp-pvp-server_server'
+    static_configs:
+      - targets: ['cpp-pvp-server-server:9100']

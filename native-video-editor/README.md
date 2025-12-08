@@ -1,7 +1,8 @@
 # native-video-editor - 웹 기반 동영상 편집기
 
 **상태**: ✅ Phase 3 Extended 완료 (v3.2.4) - WebGL + WebAudio  
-**기술 스택**: React 18 · Node.js 20 · TypeScript 5 · C++17 · FFmpeg C API · WebGL 2.0 · WebAudio API
+**기술 스택**: React 18 · Node.js 20 · TypeScript 5 · C++17 · FFmpeg C API · WebGL 2.0 · WebAudio API  
+**최근 검증**: 2025-12-09 | 빌드 ✅ | 테스트 ✅ (Backend 6/6, Frontend 2/2, Native 11/11)
 
 ---
 

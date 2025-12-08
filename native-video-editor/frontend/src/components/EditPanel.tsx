@@ -1,3 +1,14 @@
+// [FILE]
+// - 목적: 비디오 편집 패널 (트림, 분할, 자막, 속도)
+// - 주요 역할: 편집 옵션 UI, 사용자 입력 수집, API 호출
+// - 관련 클론 가이드 단계: [CG-v1.1.0] Trim/Split, [CG-v1.2.0] 자막/속도
+// - 권장 읽는 순서: Order 1 (상태 관리) → Order 2 (이벤트 핸들러)
+//
+// [LEARN] C 개발자를 위한 React 폼 패턴:
+// - 각 입력 필드마다 useState로 상태를 관리한다.
+// - 사용자가 입력하면 상태가 업데이트되고, 컴포넌트가 다시 렌더링된다.
+// - 제출 시 상태 값들을 모아서 API를 호출한다.
+
 import { useState, useEffect } from 'react';
 import { VideoMetadata } from '../types/video';
 import { EditResult } from '../types/edit';
@@ -7,12 +18,15 @@ import { useVideoEdit } from '../hooks/useVideoEdit';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
+// [LEARN] Props 인터페이스
+// - 부모 컴포넌트(App.tsx)가 전달하는 데이터 타입을 정의한다.
+// - onEditComplete는 선택적 콜백 (없을 수도 있음).
 interface EditPanelProps {
-  video: VideoMetadata;
-  duration: number;
-  currentTime: number;
-  onEditComplete?: (result: EditResult) => void;
-  onSplitComplete?: (results: EditResult[]) => void;
+  video: VideoMetadata;        // 현재 편집 중인 비디오 정보
+  duration: number;            // 비디오 길이 (초)
+  currentTime: number;         // 현재 재생 위치 (초)
+  onEditComplete?: (result: EditResult) => void;      // 편집 완료 콜백
+  onSplitComplete?: (results: EditResult[]) => void;  // 분할 완료 콜백
 }
 
 /**
@@ -25,8 +39,13 @@ export function EditPanel({
   onEditComplete,
   onSplitComplete,
 }: EditPanelProps) {
+  // [LEARN] 커스텀 훅 사용
+  // - useVideoEdit()이 API 호출 로직을 캡슐화한다.
+  // - 반환된 trimVideo, splitVideo 함수를 호출하면 된다.
   const { trimVideo, splitVideo, processing, error } = useVideoEdit();
 
+  // [Order 1] 폼 상태 관리
+  // - 각 입력 필드에 대응하는 상태를 선언한다.
   const [mode, setMode] = useState<'trim' | 'split' | 'subtitle'>('trim');
   const [trimStart, setTrimStart] = useState(0);
   const [trimEnd, setTrimEnd] = useState(0);
@@ -36,6 +55,9 @@ export function EditPanel({
   const [processingSubtitle, setProcessingSubtitle] = useState(false);
   const [subtitleError, setSubtitleError] = useState<string | null>(null);
 
+  // [LEARN] 초기값 설정
+  // - duration이 로드되면 기본값을 설정한다.
+  // - 트림 종료 시간은 비디오 끝, 분할 시간은 중간 지점.
   useEffect(() => {
     if (duration > 0) {
       setTrimEnd(duration);
@@ -49,7 +71,10 @@ export function EditPanel({
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // [Order 2] 이벤트 핸들러
   const handleTrim = async () => {
+    // [LEARN] 클라이언트 측 유효성 검증
+    // - 잘못된 입력은 API 호출 전에 차단한다.
     if (trimStart >= trimEnd) {
       alert('End time must be greater than start time');
       return;
@@ -61,6 +86,8 @@ export function EditPanel({
       endTime: trimEnd,
     });
 
+    // [LEARN] 콜백 호출 전 결과 확인
+    // - result가 null/undefined가 아닌 경우에만 콜백을 호출한다.
     if (result && onEditComplete) {
       onEditComplete(result);
     }

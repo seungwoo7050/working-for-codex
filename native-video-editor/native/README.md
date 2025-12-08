@@ -2,6 +2,8 @@
 
 High-performance C++ native addon for video processing using FFmpeg C API and N-API.
 
+**Build Status**: ✅ Verified on 2025-12-09 (macOS arm64, Node.js 24.x)
+
 ## Features
 
 - **Thumbnail Extraction**: Extract video frames at specific timestamps (Target: p99 < 50ms)

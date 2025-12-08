@@ -1,0 +1,1 @@
+add_library(pvpserver_integration_tests INTERFACE)

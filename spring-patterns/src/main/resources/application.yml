@@ -1,58 +1,159 @@
+# ═══════════════════════════════════════════════════════════════════════════════
+# [FILE] Spring Boot 메인 설정 파일
+# ─────────────────────────────────────────────────────────────────────────────────
+# - 목적: 애플리케이션 전체 설정 (DB, 캐시, 보안 등)
+# - 관련 클론 가이드 단계: [CG-v0.1.0] 0.1.2 application.yml 설정
+#
+# [LEARN] C 개발자를 위한 설명:
+# YAML은 "들여쓰기로 계층을 표현하는 설정 파일 형식"이다.
+# C에서 config.ini나 JSON을 파싱하던 것을 Spring Boot가 자동으로 처리한다.
+#
+# 예: spring.datasource.url 은 아래와 같이 표현
+#     spring:
+#       datasource:
+#         url: ...
+#
+# 프로파일(Profile): 환경별 설정 분리
+# - application-local.yml: 로컬 개발 환경
+# - application-test.yml: 테스트 환경
+# - application-prod.yml: 운영 환경
+# 실행 시 --spring.profiles.active=prod 로 선택
+# ═══════════════════════════════════════════════════════════════════════════════
+
 spring:
   application:
     name: web-phase1-5
+    # [LEARN] 애플리케이션 이름: 로깅, 모니터링에서 식별자로 사용
 
-  # v2.1: Virtual Threads 활성화 (Java 21+)
+  # ─────────────────────────────────────────────────────────────────────────────
+  # [CG-v2.1.0] Virtual Threads 설정
+  # ─────────────────────────────────────────────────────────────────────────────
   threads:
     virtual:
       enabled: true
+      # [LEARN] Virtual Threads (Java 21+):
+      # 기존 OS 스레드 1개당 1개 요청 → 수천 개 가상 스레드로 동시성 향상
+      # C의 pthread_create() 오버헤드 없이 경량 스레드 수십만 개 생성 가능
+      # 블로킹 I/O에서도 효율적 (컨텍스트 스위칭 비용 감소)
 
+  # ─────────────────────────────────────────────────────────────────────────────
+  # [CG-v1.0.0] 데이터소스 설정 (JDBC - 블로킹 방식)
+  # ─────────────────────────────────────────────────────────────────────────────
   datasource:
     url: jdbc:h2:mem:testdb
+    # [LEARN] H2 인메모리 DB: 애플리케이션 종료 시 데이터 사라짐
+    # 개발/테스트용으로 적합, 프로덕션에서는 PostgreSQL 등 사용
+    # jdbc:h2:mem:testdb → 메모리 DB
+    # jdbc:h2:file:./data/testdb → 파일 기반 DB
+
     driver-class-name: org.h2.Driver
     username: sa
     password:
+    # [LEARN] H2 기본 계정: sa (System Admin), 비밀번호 없음
 
-  # v2.0: R2DBC 설정 (reactive 프로파일에서 활성화)
+  # ─────────────────────────────────────────────────────────────────────────────
+  # [CG-v2.0.0] R2DBC 설정 (Reactive - 논블로킹 방식)
+  # ─────────────────────────────────────────────────────────────────────────────
   r2dbc:
     url: r2dbc:h2:mem:///testdb
+    # [LEARN] R2DBC: Reactive Relational Database Connectivity
+    # JDBC는 블로킹, R2DBC는 논블로킹
+    # WebFlux와 함께 사용하여 완전한 리액티브 스택 구성
     username: sa
     password:
 
+  # ─────────────────────────────────────────────────────────────────────────────
+  # H2 웹 콘솔 (개발용)
+  # ─────────────────────────────────────────────────────────────────────────────
   h2:
     console:
       enabled: true
       path: /h2-console
+      # [LEARN] 브라우저에서 http://localhost:8080/h2-console 접속
+      # JDBC URL에 jdbc:h2:mem:testdb 입력하여 DB 조회 가능
+      # 프로덕션에서는 반드시 비활성화!
 
+  # ─────────────────────────────────────────────────────────────────────────────
+  # [CG-v1.0.0] JPA/Hibernate 설정
+  # ─────────────────────────────────────────────────────────────────────────────
   jpa:
     hibernate:
       ddl-auto: update
+      # [LEARN] DDL 자동 생성 옵션:
+      # - none: 스키마 변경 안 함
+      # - validate: 엔티티-테이블 일치 검증만
+      # - update: 엔티티 변경 시 ALTER TABLE (개발용)
+      # - create: 시작 시 DROP → CREATE
+      # - create-drop: 종료 시 DROP
+      # 프로덕션에서는 none 또는 validate 사용!
+
     show-sql: true
+    # [LEARN] 실행되는 SQL을 콘솔에 출력 (디버깅용)
+
     properties:
       hibernate:
         format_sql: true
+        # [LEARN] SQL 출력 시 포맷팅 (들여쓰기)
 
+  # ─────────────────────────────────────────────────────────────────────────────
+  # [CG-v1.2.0] 캐시 설정
+  # ─────────────────────────────────────────────────────────────────────────────
   cache:
     type: simple
+    # [LEARN] 캐시 타입:
+    # - simple: ConcurrentHashMap 기반 (단일 서버용)
+    # - redis: Redis 기반 (분산 환경용)
+    # - caffeine: 고성능 인메모리 캐시
+
     cache-names:
       - popularIssues
+      # [LEARN] 사전 정의 캐시 이름
+      # @Cacheable(value = "popularIssues", ...) 에서 참조
 
+  # ─────────────────────────────────────────────────────────────────────────────
+  # [CG-v1.3.0] Elasticsearch 설정
+  # ─────────────────────────────────────────────────────────────────────────────
   elasticsearch:
     uris: http://localhost:9200
+    # [LEARN] Elasticsearch: 전문 검색 엔진
+    # 대량 텍스트 검색, 로그 분석 등에 사용
+    # 별도 Elasticsearch 서버 설치 필요
 
+  # ─────────────────────────────────────────────────────────────────────────────
+  # [CG-v1.4.0] Kafka 설정
+  # ─────────────────────────────────────────────────────────────────────────────
   kafka:
     bootstrap-servers: localhost:9092
+    # [LEARN] Kafka: 분산 메시지 큐
+    # 비동기 이벤트 처리, 마이크로서비스 간 통신에 사용
+    # 별도 Kafka 클러스터 설치 필요
+
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      # [LEARN] 메시지 직렬화: Java 객체 → JSON 바이트
+
     consumer:
       group-id: training-group
+      # [LEARN] Consumer Group: 같은 그룹의 컨슈머는 메시지를 분배받음
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
+        # [LEARN] JSON 역직렬화 시 허용할 패키지 (보안)
       auto-offset-reset: earliest
+      # [LEARN] 새 컨슈머가 처음 시작할 때:
+      # - earliest: 처음부터 모든 메시지 소비
+      # - latest: 이후 새 메시지만 소비
 
+# ─────────────────────────────────────────────────────────────────────────────
+# [CG-v1.1.0] JWT 설정 (커스텀)
+# ─────────────────────────────────────────────────────────────────────────────
 jwt:
   secret: mySecretKeyForJWTTokenGenerationAndValidationThatIsLongEnough
+  # [LEARN] JWT 서명 비밀키: 최소 256비트(32바이트) 필요 (HS256)
+  # 프로덕션에서는 환경변수로 주입: ${JWT_SECRET}
+
   expiration: 86400000
+  # [LEARN] 토큰 만료 시간 (밀리초): 86400000 = 24시간
+  # 보안과 편의성 트레이드오프: 짧으면 안전, 길면 편리
