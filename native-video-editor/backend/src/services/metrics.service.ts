@@ -7,7 +7,8 @@ import { Registry, Counter, Histogram, Gauge, collectDefaultMetrics } from 'prom
 
 export class MetricsService {
   private registry: Registry;
-  private systemMetricsInterval?: NodeJS.Timer;
+  private defaultMetricsInterval?: NodeJS.Timeout;
+  private systemMetricsInterval?: NodeJS.Timeout;
 
   // Thumbnail extraction metrics
   public thumbnailDuration: Histogram;
@@ -33,11 +34,16 @@ export class MetricsService {
   public memoryUsage: Gauge;
   public cpuUsage: Gauge;
 
-  constructor(enableSystemMetrics = true) {
+  constructor(enableSystemMetrics = true, enableDefaultMetrics = true) {
     this.registry = new Registry();
 
     // Enable default metrics (CPU, memory, event loop, etc.)
-    collectDefaultMetrics({ register: this.registry, prefix: 'video_editor_' });
+    if (enableDefaultMetrics) {
+      this.defaultMetricsInterval = collectDefaultMetrics({
+        register: this.registry,
+        prefix: 'video_editor_',
+      }) as unknown as NodeJS.Timeout | undefined;
+    }
 
     // Thumbnail extraction metrics
     this.thumbnailDuration = new Histogram({
@@ -184,6 +190,23 @@ export class MetricsService {
   }
 
   /**
+   * Stop background metric collectors to avoid open handles
+   */
+  public shutdown(): void {
+    if (this.defaultMetricsInterval) {
+      clearInterval(this.defaultMetricsInterval);
+      this.defaultMetricsInterval = undefined;
+    }
+
+    if (this.systemMetricsInterval) {
+      clearInterval(this.systemMetricsInterval);
+      this.systemMetricsInterval = undefined;
+    }
+
+    this.registry.clear();
+  }
+
+  /**
    * Record thumbnail extraction
    */
   public recordThumbnailExtraction(durationSeconds: number, success: boolean): void {
@@ -256,5 +279,6 @@ export class MetricsService {
   }
 }
 
-// Singleton instance
-export const metricsService = new MetricsService();
+// Singleton instance (disable background collectors during tests)
+const isTestEnv = process.env.NODE_ENV === 'test';
+export const metricsService = new MetricsService(!isTestEnv, !isTestEnv);

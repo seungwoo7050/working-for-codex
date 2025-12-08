@@ -27,10 +27,7 @@ import static org.awaitility.Awaitility.await;
         "test.kafka.mock=false"
 })
 @ActiveProfiles("test")
-@EmbeddedKafka(partitions = 3, brokerProperties = {
-        "listeners=PLAINTEXT://localhost:9092",
-        "port=9092"
-})
+@EmbeddedKafka(partitions = 3, ports = 0)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class OrderKafkaIntegrationTest {
 

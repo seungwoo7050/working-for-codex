@@ -2,19 +2,21 @@ import { jest } from '@jest/globals';
 import { MetricsService } from '../services/metrics.service.js';
 
 describe('MetricsService', () => {
+  let service: MetricsService;
+
   beforeEach(() => {
     jest.useFakeTimers();
+    service = new MetricsService(false, false);
   });
 
   afterEach(() => {
     jest.runOnlyPendingTimers();
     jest.clearAllTimers();
     jest.useRealTimers();
+    service.shutdown();
   });
 
   it('records thumbnail extraction metrics and cache ratio', async () => {
-    const service = new MetricsService(false);
-
     service.recordThumbnailExtraction(0.5, true);
     service.updateThumbnailCacheStats(3, 1);
 
@@ -32,8 +34,6 @@ describe('MetricsService', () => {
   });
 
   it('increments error counters for different domains', async () => {
-    const service = new MetricsService(false);
-
     service.recordError('thumbnail', 'ThumbnailError');
     service.recordError('metadata', 'MetadataError');
     service.recordError('api', 'BadRequest', { method: 'GET', route: '/test' });
