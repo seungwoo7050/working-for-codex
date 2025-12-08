@@ -71,6 +71,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Install FFmpeg build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libavformat-dev \
+            libavcodec-dev \
+            libavutil-dev \
+            libswscale-dev
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -81,6 +89,9 @@ jobs:
       - name: Install native dependencies
         working-directory: native-video-editor/native
         run: npm ci
+      - name: Build native module
+        working-directory: native-video-editor/native
+        run: npm run build
       - name: Run native tests
         working-directory: native-video-editor/native
         run: npm test
