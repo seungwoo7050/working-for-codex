@@ -68,6 +68,7 @@
 | React | 18 | 현대적 UI 프레임워크 |
 | TypeScript | 5 | 타입 안전 JavaScript |
 | Vite | - | 초고속 빌드 도구 |
+| Vitest | - | Vite 기반 테스트 러너 |
 | TailwindCSS | - | 유틸리티 우선 CSS |
 | Canvas API | - | 타임라인 렌더링 (60 FPS) |
 | WebGL 2.0 | - | GPU 가속 비디오 렌더링 |
@@ -83,7 +84,8 @@
 | fluent-ffmpeg | - | FFmpeg 래퍼 (Phase 1) |
 | WebSocket (ws) | - | 실시간 통신 |
 | pg | - | PostgreSQL 클라이언트 |
-| ioredis | - | Redis 클라이언트 |
+| prom-client | - | Prometheus 메트릭 |
+| Jest | - | 테스트 프레임워크 (ESM 지원) |
 | prom-client | - | Prometheus 메트릭 |
 
 ### 네이티브 레이어
@@ -503,8 +505,11 @@ npm test       # 유닛 테스트 실행
 
 **유닛 테스트**
 ```bash
-# 백엔드
+# 백엔드 (Jest + ESM)
 cd backend && npm test
+
+# 프론트엔드 (Vitest)
+cd frontend && npm test
 
 # 네이티브 애드온
 cd native && npm test

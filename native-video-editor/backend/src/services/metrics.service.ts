@@ -5,8 +5,9 @@
 
 import { Registry, Counter, Histogram, Gauge, collectDefaultMetrics } from 'prom-client';
 
-class MetricsService {
+export class MetricsService {
   private registry: Registry;
+  private systemMetricsInterval?: NodeJS.Timer;
 
   // Thumbnail extraction metrics
   public thumbnailDuration: Histogram;
@@ -32,7 +33,7 @@ class MetricsService {
   public memoryUsage: Gauge;
   public cpuUsage: Gauge;
 
-  constructor() {
+  constructor(enableSystemMetrics = true) {
     this.registry = new Registry();
 
     // Enable default metrics (CPU, memory, event loop, etc.)
@@ -144,14 +145,16 @@ class MetricsService {
     });
 
     // Update system metrics periodically
-    this.startSystemMetricsCollection();
+    if (enableSystemMetrics) {
+      this.startSystemMetricsCollection();
+    }
   }
 
   /**
    * Start collecting system metrics
    */
   private startSystemMetricsCollection(): void {
-    setInterval(() => {
+    this.systemMetricsInterval = setInterval(() => {
       const memUsage = process.memoryUsage();
 
       this.memoryUsage.set({ type: 'rss' }, memUsage.rss);

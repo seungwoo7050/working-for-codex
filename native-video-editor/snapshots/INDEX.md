@@ -91,6 +91,11 @@ open http://localhost:5173
 - Node.js 20.x
 - npm 9.x 이상
 
+### 테스트 프레임워크
+- **Backend**: Jest (ESM 지원, `NODE_OPTIONS=--experimental-vm-modules`)
+- **Frontend**: Vitest (jsdom 환경)
+- **Native**: Node.js 내장 테스트
+
 ### Phase 1 추가 요구사항 (v1.1.0 이후)
 - FFmpeg 설치 (`brew install ffmpeg` 또는 `apt install ffmpeg`)
 
