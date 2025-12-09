@@ -1,3 +1,19 @@
+// [FILE]
+// - 목적: 매치메이킹 대기열 구현 (인메모리 + Redis 스텁)
+// - 주요 역할: 플레이어 대기열 관리, ELO 기반 버킷 정렬, 순서 보장
+// - 관련 클론 가이드 단계: [CG-v1.2.0] 매치메이킹
+// - 권장 읽는 순서: matchmaker.cpp 이후 이 파일 참고
+//
+// [LEARN] 매치메이킹 큐 자료구조:
+//         - buckets_: ELO별로 플레이어를 그룹화 (map<elo, list>)
+//         - index_: player_id로 빠른 조회를 위한 인덱스
+//         - 이중 자료구조로 O(1) 조회 + ELO 기반 정렬을 동시에 달성
+//
+// [Reader Notes]
+// - InMemoryMatchQueue: 단일 서버용 인메모리 구현
+// - RedisMatchQueue: 분산 서버용 Redis 구현 (현재 스텁)
+// - 다음에 읽을 파일: matchmaker.cpp (이 큐를 사용하는 매칭 로직)
+
 #include "pvpserver/matchmaking/match_queue.h"
 
 #include <algorithm>
@@ -9,7 +25,12 @@ namespace pvpserver {
 InMemoryMatchQueue::InMemoryMatchQueue() = default;
 InMemoryMatchQueue::~InMemoryMatchQueue() = default;
 
+// [Order 1] Upsert - 플레이어를 대기열에 추가/갱신
+// [LEARN] Upsert = Update + Insert
+//         이미 대기 중인 플레이어면 기존 항목 제거 후 새로 추가.
+//         ELO 버킷 내에서 order 순서를 유지하여 "먼저 온 사람 먼저 매칭".
 void InMemoryMatchQueue::Upsert(const MatchRequest& request, std::uint64_t order) {
+    // 기존 항목이 있으면 제거 (ELO가 변경되었을 수 있음)
     auto existing = index_.find(request.player_id());
     if (existing != index_.end()) {
         auto bucket_it = buckets_.find(existing->second.first);

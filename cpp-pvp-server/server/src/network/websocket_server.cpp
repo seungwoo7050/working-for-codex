@@ -1,7 +1,7 @@
 // [FILE]
 // - 목적: WebSocket 기반 실시간 양방향 통신 서버
 // - 주요 역할: 클라이언트 연결 관리, 입력 수신, 게임 상태 브로드캐스트
-// - 관련 클론 가이드 단계: [v1.0.0] 기본 게임 서버
+// - 관련 클론 가이드 단계: [CG-v1.0.0] 기본 게임 서버
 // - 권장 읽는 순서: ClientSession 클래스 → WebSocketServer 클래스 → BroadcastState
 //
 // [LEARN] Boost.Beast는 HTTP/WebSocket 프로토콜 구현 라이브러리.
@@ -118,7 +118,7 @@ class WebSocketServer::ClientSession
         }
         if (should_write) {
             DoWrite();
-        DoWrite();
+        }
     }
 
     // 비동기 쓰기 실행

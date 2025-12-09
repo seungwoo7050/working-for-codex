@@ -1,13 +1,18 @@
 // [FILE]
-// 목적: 패킷 타입 정의 및 직렬화 - UDP 통신용 바이너리 프로토콜
-// - 관련 클론 가이드 단계: [v1.4.0] UDP 권위 서버 코어
+// - 목적: 패킷 타입 정의 및 직렬화 - UDP 통신용 바이너리 프로토콜
+// - 주요 역할: 패킷 헤더/페이로드 직렬화/역직렬화, 바이트 순서 변환
+// - 관련 클론 가이드 단계: [CG-v1.4.0] UDP 권위 서버 코어
+// - 권장 읽는 순서: WriteUint* 헬퍼 → PacketHeader → ConnectPacket → InputPacket
+//
+// [LEARN] C 개발자를 위한 바이너리 직렬화:
+//         - Big-Endian: 네트워크 바이트 순서로 다중 플랫폼 호환
+//         - memcpy로 float↔uint32 변환: IEEE 754 비트 패턴 보존
+//         - 버퍼 언더플로우 체크: 안전한 역직렬화를 위한 경계 검사
+//         - struct 패킹 대신 명시적 직렬화로 패딩 문제 방지
+//
+// [Reader Notes]
+// - Protocol Buffers 등 IDL 대신 수동 직렬화 → 성능과 크기 최적화
 // - 이 파일을 읽기 전에: design/v1.4.0-udp-netcode.md 참고
-// - 학습 포인트:
-//   [Order 1] Big-Endian 직렬화: 네트워크 바이트 순서로 다중 플랫폼 호환
-//   [Order 2] memcpy로 float↔uint32 변환: IEEE 754 비트 패턴 보존
-//   [Order 3] 버퍼 언더플로우 체크: 안전한 역직렬화를 위한 경계 검사
-// - [LEARN] C와 유사: struct 패킹 대신 명시적 직렬화로 패딩 문제 방지
-// - [Reader Notes] Protocol Buffers 등 IDL 대신 수동 직렬화 → 성능과 크기 최적화
 // - 다음에 읽을 파일: snapshot_manager.cpp (이 패킷 타입을 사용하는 스냅샷 시스템)
 
 #include "pvpserver/network/packet_types.h"

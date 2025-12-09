@@ -1,7 +1,7 @@
 // [FILE]
 // - 목적: PvP 게임 서버의 진입점 (main 함수)
 // - 주요 역할: 모든 서버 컴포넌트를 초기화하고 연결하며, 이벤트 루프 실행
-// - 관련 클론 가이드 단계: [v0.1.0] Bootstrap, [v1.0.0] 기본 서버
+// - 관련 클론 가이드 단계: [CG-v0.1.0] Bootstrap, [CG-v1.0.0] 기본 서버
 // - 권장 읽는 순서: main() → GameLoop/WebSocketServer 초기화 → 시그널 핸들러
 //
 // [LEARN] C++ 서버의 main.cpp는 C의 main()과 비슷하지만,

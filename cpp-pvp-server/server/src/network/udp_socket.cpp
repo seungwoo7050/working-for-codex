@@ -1,8 +1,16 @@
 // [FILE]
-// 목적: UDP 소켓 래퍼 - Boost.Asio를 사용한 비동기 UDP 통신의 기본 추상화 레이어
-// - 관련 클론 가이드 단계: [v1.4.0-p1] UDP 소켓 래퍼 구현
+// - 목적: UDP 소켓 래퍼 - Boost.Asio를 사용한 비동기 UDP 통신의 기본 추상화 레이어
+// - 주요 역할: 비동기 수신/송신, 클라이언트 관리, 통계 수집
+// - 관련 클론 가이드 단계: [CG-v1.4.0] UDP 소켓 래퍼 구현
+// - 권장 읽는 순서: StartReceive → DoReceive → HandleReceive → SendTo
+//
+// [LEARN] Boost.Asio 비동기 UDP:
+//         - async_receive_from/async_send_to로 논블로킹 I/O 처리
+//         - shared_from_this 패턴으로 콜백 내 객체 수명 보장
+//         - C의 select/poll + recvfrom/sendto를 추상화한 것
+//
+// [Reader Notes]
 // - 이 파일을 읽기 전에: design/v1.4.0-udp-netcode.md, websocket_server.cpp 참고
-// - 학습 포인트: async_receive_from/async_send_to, shared_from_this 패턴, 통계 수집
 // - 다음에 읽을 파일: udp_game_server.cpp (이 소켓을 사용하는 게임 서버)
 
 #include "pvpserver/network/udp_socket.h"

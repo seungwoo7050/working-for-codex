@@ -30,7 +30,11 @@
           "cflags_cc": [ "-std=c++17", "-Wall", "-Wextra", "-pthread" ]
         }],
         ["OS=='mac'", {
+          "include_dirs": [
+            "/opt/homebrew/include"
+          ],
           "libraries": [
+            "-L/opt/homebrew/lib",
             "-lavformat",
             "-lavcodec",
             "-lavutil",

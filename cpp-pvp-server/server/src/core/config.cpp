@@ -1,14 +1,16 @@
 // [FILE]
-// 목적: 서버 설정 관리 - 환경 변수에서 설정값 로드
-// - 관련 클론 가이드 단계: [v0.1.0] Bootstrap, [v1.0.0] Basic Game Server
-// - 이 파일을 읽기 전에: design/0.0-initial-design.md 참고
-// - 학습 포인트:
-//   [Order 1] 12-Factor App: 환경 변수로 설정 (코드와 설정 분리)
-//   [Order 2] 기본값 패턴: 환경 변수 미설정 시 안전한 기본값 사용
-//   [Order 3] 파싱 에러 처리: try-catch로 잘못된 값 처리
-// - [LEARN] std::getenv: C의 getenv()와 동일, nullptr 반환 가능성 주의
-// - [Reader Notes] Docker/K8s 배포 시 환경 변수로 포트, DB DSN 등 설정
+// - 목적: 서버 설정 관리 - 환경 변수에서 설정값 로드
+// - 주요 역할: 환경 변수 파싱, 기본값 제공, 설정 객체 생성
+// - 관련 클론 가이드 단계: [CG-v0.1.0] Bootstrap, [CG-v1.0.0] Basic Game Server
+// - 권장 읽는 순서: GameConfig::FromEnv() → ParsePortOrDefault → ParseDoubleOrDefault
+//
+// [LEARN] 12-Factor App: 환경 변수로 설정 (코드와 설정 분리).
+//         std::getenv는 C의 getenv()와 동일하며, nullptr 반환 가능성 주의.
+//         Docker/K8s 배포 시 환경 변수로 포트, DB DSN 등을 설정한다.
+//
+// [Reader Notes]
 // - 다음에 읽을 파일: main.cpp (설정을 사용하여 서버 초기화)
+// - 관련 설계 문서: design/0.0-initial-design.md
 
 #include "pvpserver/core/config.h"
 
