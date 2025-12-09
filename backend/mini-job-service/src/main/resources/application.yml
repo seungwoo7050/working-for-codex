@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: mini-job-service
+server:
+  port: 8080
