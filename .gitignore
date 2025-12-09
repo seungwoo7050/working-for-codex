@@ -1,0 +1,5 @@
+/node_modules
+frontend/mini-job-dashboard/node_modules
+backend/mini-job-service/.gradle
+backend/mini-job-service/build
+cpp/**/build
