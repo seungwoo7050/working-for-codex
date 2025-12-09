@@ -233,17 +233,48 @@ jobs:
 
 ### 3.1 Lint 규칙
 
-**ESLint 설정**:
+**Backend ESLint 설정** (`backend/.eslintrc.json`):
 ```json
 {
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended"
   ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-console": "off",
+    "@typescript-eslint/no-unused-vars": "error"
+  }
+}
+```
+
+**Frontend ESLint 설정** (`frontend/.eslintrc.json`):
+```json
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "rules": {
     "no-console": "warn",
-    "@typescript-eslint/no-explicit-any": "error",
-    "@typescript-eslint/no-unused-vars": "error"
+    "@typescript-eslint/no-unused-vars": "error",
+    "react/react-in-jsx-scope": "off"
   }
 }
 ```

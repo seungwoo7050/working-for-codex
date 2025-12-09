@@ -42,7 +42,9 @@ Voyager X 웹 애플리케이션 개발자 채용 요구사항:
 2. 타임라인 에디터 + 트림/분할 기능 → **Phase 1**
 3. C++ Native Addon (FFmpeg C API 직접 사용) → **Phase 2**
 4. 성능 모니터링 (Prometheus + Grafana) → **Phase 2**
-5. Docker 배포 + 프로덕션 문서화 → **Phase 3**
+5. Docker 배포 + 프로덕션 문서화 → **Phase 3.0**
+6. WebGL 기반 고성능 비디오 렌더링 엔진 → **Phase 3.1**
+7. WebAudio 기반 실시간 오디오 처리 엔진 → **Phase 3.2**
 
 ---
 
@@ -139,11 +141,19 @@ Phase 3: 프로덕션 배포
 │  2.3    │ - Prometheus 메트릭                                   │
 │         │ - Grafana 대시보드                                    │
 ├─────────┼───────────────────────────────────────────────────────┤
-│ Phase 3 │ 프로덕션 완성도                                       │
+│ Phase 3 │ 프로덕션 완성도 & 고급 렌더링                         │
 │         │                                                       │
 │  3.0    │ - Docker Compose 배포                                 │
 │         │ - 포괄적 문서화                                       │
 │         │ - 성능 벤치마크 보고서                                │
+│  3.1    │ - WebGL 코어 엔진                                     │
+│         │ - 셰이더 시스템                                       │
+│         │ - 텍스처 관리 & 렌더링 파이프라인                     │
+│         │ - WebGL 성능 최적화                                   │
+│  3.2    │ - WebAudio 코어 엔진                                  │
+│         │ - 오디오 노드 시스템                                  │
+│         │ - 실시간 오디오 처리                                  │
+│         │ - 오디오 시각화 & 성능 최적화                         │
 └─────────┴───────────────────────────────────────────────────────┘
 ```
 
@@ -257,14 +267,21 @@ native-video-editor/
 ├── frontend/                       # React + Vite
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── VideoPlayer/        # 비디오 재생
-│   │   │   ├── Timeline/           # 타임라인 에디터
-│   │   │   ├── ControlPanel/       # 컨트롤 패널
-│   │   │   └── Upload/             # 업로드 컴포넌트
+│   │   │   ├── VideoPlayer.tsx     # 비디오 재생
+│   │   │   ├── Timeline.tsx        # 타임라인 에디터
+│   │   │   ├── ControlPanel.tsx    # 컨트롤 패널
+│   │   │   ├── VideoUpload.tsx     # 업로드 컴포넌트
+│   │   │   ├── EditPanel.tsx       # 편집 패널
+│   │   │   ├── ProjectPanel.tsx    # 프로젝트 패널
+│   │   │   ├── SubtitleEditor.tsx  # 자막 에디터
+│   │   │   └── ProgressBar.tsx     # 진행률 표시
 │   │   ├── hooks/
 │   │   │   ├── useVideoUpload.ts   # 업로드 훅
-│   │   │   ├── useTimeline.ts      # 타임라인 훅
+│   │   │   ├── useVideoEdit.ts     # 편집 훅
+│   │   │   ├── useProjects.ts      # 프로젝트 훅
 │   │   │   └── useWebSocket.ts     # WebSocket 훅
+│   │   ├── webgl/                  # WebGL 렌더링 엔진 (Phase 3.1)
+│   │   ├── webaudio/               # WebAudio 오디오 엔진 (Phase 3.2)
 │   │   ├── types/
 │   │   │   └── video.ts            # 타입 정의
 │   │   ├── App.tsx
@@ -281,40 +298,60 @@ native-video-editor/
 │   │   ├── services/
 │   │   │   ├── ffmpeg.service.ts   # FFmpeg 래퍼
 │   │   │   ├── storage.service.ts  # 파일 저장
-│   │   │   └── project.service.ts  # 프로젝트 관리
+│   │   │   ├── metrics.service.ts  # Prometheus 메트릭
+│   │   │   └── native-video.service.ts # C++ 네이티브 연동
 │   │   ├── db/
-│   │   │   └── prisma/             # Prisma 클라이언트
+│   │   │   ├── database.service.ts # PostgreSQL 직접 연결
+│   │   │   └── redis.service.ts    # Redis 서비스
 │   │   ├── ws/
 │   │   │   └── progress.ts         # WebSocket 진행률
-│   │   ├── metrics/
-│   │   │   └── prometheus.ts       # Prometheus 메트릭
+│   │   ├── types/
+│   │   │   └── index.ts            # 타입 정의
 │   │   └── server.ts
 │   ├── package.json
 │   └── tsconfig.json
 ├── native/                         # C++ Native Addon
 │   ├── src/
-│   │   ├── addon.cpp               # N-API 진입점
-│   │   ├── video_processor.cpp     # 비디오 처리
+│   │   ├── video_processor.cpp     # 비디오 처리 + N-API 진입점
 │   │   ├── thumbnail_extractor.cpp # 썸네일 추출
 │   │   ├── metadata_analyzer.cpp   # 메타데이터 분석
 │   │   └── memory_pool.cpp         # 메모리 풀
 │   ├── include/
-│   │   ├── video_processor.h
+│   │   ├── ffmpeg_raii.h           # FFmpeg RAII 래퍼
 │   │   ├── thumbnail_extractor.h
+│   │   ├── metadata_analyzer.h
 │   │   └── memory_pool.h
 │   └── binding.gyp                 # node-gyp 빌드 설정
 ├── design/
-│   ├── 0.0-initial-design.md       # 초기 설계서 (이 문서)
-│   ├── 0.0-bootstrap.md            # 프로젝트 부트스트랩
-│   ├── 1.0-basic-infrastructure.md
-│   ├── 1.1-trim-split.md
-│   ├── 2.0-native-addon-setup.md
-│   ├── 2.1-thumbnail-extraction.md
-│   └── 3.0-production-deployment.md
+│   ├── initial-design.md           # 초기 설계서 (이 문서)
+│   ├── ci.md                        # CI/CD 파이프라인 설계
+│   ├── v0.1.0-bootstrap.md          # 프로젝트 부트스트랩
+│   ├── v1.0.0-basic-infrastructure.md
+│   ├── v1.1.0-trim-split.md
+│   ├── v1.2.0-subtitle-speed.md
+│   ├── v1.3.0-websocket-persistence.md
+│   ├── v2.0.0-native-addon-setup.md
+│   ├── v2.1.0-thumbnail-extraction.md
+│   ├── v2.2.0-metadata-analysis.md
+│   ├── v2.3.0-performance-monitoring.md
+│   ├── v3.0.0-production-deployment.md
+│   ├── v3.1.0-webgl-core-engine.md  # WebGL 엔진 (Phase 3.1)
+│   ├── v3.1.1-webgl-shader-system.md
+│   ├── v3.1.2-webgl-texture-management.md
+│   ├── v3.1.3-webgl-rendering-pipeline.md
+│   ├── v3.1.4-webgl-performance.md
+│   ├── v3.2.0-webaudio-core-engine.md # WebAudio 엔진 (Phase 3.2)
+│   ├── v3.2.1-audio-node-system.md
+│   ├── v3.2.2-realtime-audio-processing.md
+│   ├── v3.2.3-audio-visualization.md
+│   └── v3.2.4-webaudio-performance.md
 ├── docs/
 │   ├── architecture.md
 │   ├── performance-report.md
 │   └── evidence/                   # 증거 스크린샷
+│       ├── phase-1/
+│       ├── phase-2/
+│       └── phase-3/
 ├── migrations/                     # PostgreSQL 마이그레이션
 ├── monitoring/
 │   ├── prometheus/
@@ -323,9 +360,13 @@ native-video-editor/
 │       └── dashboards/
 ├── deployments/
 │   └── docker/
-│       ├── Dockerfile.frontend
-│       ├── Dockerfile.backend
-│       └── docker-compose.yml
+│       ├── docker-compose.yml
+│       └── docker-compose.prod.yml
+├── expansion/                      # 확장 계획
+│   ├── complete/                   # 완료된 확장
+│   ├── not-yet/                    # 미완료 확장
+│   └── prompt/                     # 개발 가이드
+├── snapshots/                      # 버전 스냅샷
 └── README.md
 ```
 
@@ -680,8 +721,10 @@ docs/
    - Canvas 타임라인 기초
 
 ### 참고 문서
-- [Phase 0 Bootstrap](./0.0-bootstrap.md)
-- [Phase 1.0 Basic Infrastructure](./1.0-basic-infrastructure.md)
-- [Phase 2.0 Native Addon Setup](./2.0-native-addon-setup.md)
+- [Phase 0 Bootstrap](./v0.1.0-bootstrap.md)
+- [Phase 1.0 Basic Infrastructure](./v1.0.0-basic-infrastructure.md)
+- [Phase 2.0 Native Addon Setup](./v2.0.0-native-addon-setup.md)
+- [Phase 3.1 WebGL Core Engine](./v3.1.0-webgl-core-engine.md)
+- [Phase 3.2 WebAudio Core Engine](./v3.2.0-webaudio-core-engine.md)
 - [FFmpeg 공식 문서](https://ffmpeg.org/documentation.html)
 - [N-API 가이드](https://nodejs.org/api/n-api.html)
